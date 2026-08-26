@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Westjan FC · Superliga 8v8</title>
+<style>
+/* Paleta tomada del escudo: celeste #6BACE4, blanco, sol #EEB425, negro */
+:root{
+  color-scheme: dark;
+  --plane:#0a0a0b; --surface:#141416; --surface-2:#1d1d20; --surface-3:#26262a;
+  --ink:#ffffff; --ink-2:#c6c8cc; --muted:#8b8d93;
+  --grid:#26262a; --line:#33343a; --border:rgba(255,255,255,.11);
+  --s1:#6bace4; --s2:#d95926; --s3:#199e70; --s4:#eeb425;
+  --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#e66767;
+  --brand:#6bace4; --gold:#eeb425;
+  --accent:#6bace4; --accent-ink:#0a0a0b;
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.35);
+}
+[data-theme="light"]{
+  color-scheme: light;
+  --plane:#f7f9fb; --surface:#ffffff; --surface-2:#eef3f8; --surface-3:#e2eaf2;
+  --ink:#0b0f14; --ink-2:#4a535e; --muted:#7d8792;
+  --grid:#e2eaf2; --line:#c3cfda; --border:rgba(11,15,20,.10);
+  --s1:#277bc4; --s2:#eb6834; --s3:#1baf7a; --s4:#8a6300;
+  --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948;
+  --good:#006300; --crit:#d03b3b;
+  --brand:#277bc4; --gold:#8a6300;
+  --accent:#277bc4; --accent-ink:#ffffff;
+  --shadow: 0 1px 2px rgba(11,15,20,.06), 0 8px 24px rgba(11,15,20,.08);
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html,body{margin:0;padding:0}
+body{
+  background:var(--plane); color:var(--ink);
+  font-family: system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.45; -webkit-text-size-adjust:100%;
+  padding-bottom:60px;
+}
+h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
+button{font:inherit; cursor:pointer}
+input,select,textarea{font:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* ---------- header ---------- */
+header.app{
+  position:sticky; top:0; z-index:40;
+  background:color-mix(in srgb, var(--plane) 88%, transparent);
+  backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.hrow{display:flex;align-items:center;gap:12px;padding:12px 0}
+.crest{
+  width:40px;height:40px;flex:none;
+  display:grid;place-items:center;font-size:19px;color:#fff;font-weight:800;
+}
+.crest img{width:100%;height:100%;object-fit:contain;display:block}
+.brand{min-width:0;flex:1}
+.brand input{
+  background:transparent;border:0;color:var(--ink);font-size:17px;font-weight:700;
+  padding:0;width:100%;letter-spacing:-.02em;outline:none;
+}
+.brand input:focus{text-decoration:underline dotted var(--muted)}
+.brand .sub{font-size:12px;color:var(--muted)}
+.hbtns{display:flex;gap:6px;flex:none}
+.iconbtn{
+  background:var(--surface-2);border:1px solid var(--border);color:var(--ink-2);
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:15px;
+}
+.iconbtn:hover{background:var(--surface-3);color:var(--ink)}
+
+/* ---------- tabs ---------- */
+nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding-bottom:0}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{
+  background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);
+  padding:9px 12px;white-space:nowrap;font-weight:560;font-size:14px;
+}
+nav.tabs button:hover{color:var(--ink-2)}
+nav.tabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
+
+/* ---------- generic ---------- */
+main{padding-top:18px}
+section.tab{display:none}
+section.tab.on{display:block}
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:16px;margin-bottom:14px;
+}
+.card>h2{font-size:14px;letter-spacing:.02em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.btn{
+  background:var(--accent);color:var(--accent-ink);border:0;border-radius:9px;
+  padding:8px 14px;font-weight:600;font-size:14px;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--border)}
+.btn.ghost:hover{background:var(--surface-3)}
+.btn.sm{padding:5px 10px;font-size:13px;border-radius:7px}
+.btn.danger{background:transparent;color:var(--crit);border:1px solid var(--border)}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:560}
+label.f input,label.f select,label.f textarea{
+  background:var(--surface-2);border:1px solid var(--border);border-radius:8px;
+  padding:7px 9px;color:var(--ink);font-size:14px;outline:none;min-width:0;
+}
+label.f input:focus,label.f select:focus{border-color:var(--accent)}
+.grid{display:grid;gap:10px}
+.empty{color:var(--muted);font-size:14px;padding:18px 0;text-align:center}
+
+/* ---------- stat tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px}
+.tile .k{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
+.tile .v{font-size:28px;font-weight:680;letter-spacing:-.025em;margin-top:2px;line-height:1.1}
+.tile .n{font-size:12px;color:var(--ink-2);margin-top:3px}
+.pos{color:var(--good)} .neg{color:var(--crit)}
+
+/* ---------- table ---------- */
+.tblwrap{overflow-x:auto;margin:0 -16px;padding:0 16px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{
+  text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;
+  color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap;
+}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+th.sortable{cursor:pointer;user-select:none}
+th.sortable:hover{color:var(--ink)}
+td{padding:8px;border-bottom:1px solid var(--grid);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface-2)}
+.name{font-weight:600}
+.pill{
+  display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:650;
+  padding:2px 8px;border-radius:999px;border:1px solid var(--border);
+}
+.pill.g{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good);border-color:transparent}
+.pill.e{background:var(--surface-3);color:var(--ink-2);border-color:transparent}
+.pill.p{background:color-mix(in srgb,var(--crit) 18%,transparent);color:var(--crit);border-color:transparent}
+
+/* ---------- bar chart ---------- */
+.bars{display:grid;gap:7px}
+.bar{display:grid;grid-template-columns:104px 1fr auto;align-items:center;gap:10px;font-size:13.5px}
+.bar .lb{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .tr{background:var(--surface-2);border-radius:4px;height:14px;overflow:hidden}
+.bar .fl{height:100%;background:var(--s1);border-radius:0 4px 4px 0;min-width:3px;transition:width .3s}
+.bar .vv{font-variant-numeric:tabular-nums;font-weight:650;min-width:22px;text-align:right}
+
+/* ---------- roster editor ---------- */
+.rost{display:grid;gap:6px}
+.rhead,.rrow{
+  display:grid;
+  grid-template-columns:22px minmax(110px,1.4fr) 46px 46px 40px 40px 44px 62px;
+  gap:6px;align-items:center;
+}
+.rhead{font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:600;text-align:center}
+.rhead span:nth-child(2){text-align:left}
+.rrow{padding:5px 0;border-bottom:1px solid var(--grid)}
+.rrow.off{opacity:.4}
+.rrow input[type=number]{
+  width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:7px;
+  padding:5px 4px;text-align:center;color:var(--ink);font-size:13.5px;outline:none;
+  -moz-appearance:textfield;
+}
+.rrow input[type=number]::-webkit-outer-spin-button,.rrow input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.rrow input[type=number]:focus{border-color:var(--accent)}
+.rrow .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.rrow .ctr{display:grid;place-items:center}
+input[type=checkbox],input[type=radio]{accent-color:var(--accent);width:17px;height:17px;cursor:pointer}
+.paychip{
+  border:1px solid var(--border);background:var(--surface-2);color:var(--muted);
+  border-radius:7px;padding:4px 0;width:100%;font-size:11.5px;font-weight:650;
+}
+.paychip.on{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good);border-color:transparent}
+
+/* ---------- break-even meter ---------- */
+.meter{margin-top:4px}
+.meter .tr{height:9px;border-radius:5px;background:var(--surface-3);overflow:hidden;display:flex}
+.meter .fl{height:100%;background:var(--s4);transition:width .25s}
+.meter .fl.ok{background:var(--good)}
+.meter .lg{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:5px}
+
+/* ---------- modal ---------- */
+.modal{
+  position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);
+  display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 12px;
+}
+.modal.on{display:flex}
+.sheet{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  width:100%;max-width:720px;padding:18px;box-shadow:var(--shadow);
+}
+.sheet h2{font-size:18px;margin-bottom:14px}
+.sticky-actions{
+  position:sticky;bottom:-18px;background:var(--surface);padding:12px 0 0;
+  margin-top:14px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;
+}
+
+.robar{
+  background:color-mix(in srgb,var(--accent) 16%,transparent);
+  color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+  border-radius:8px; padding:6px 12px; margin-bottom:8px;
+  font-size:12px; font-weight:650; letter-spacing:.02em;
+}
+.robar[hidden]{display:none}
+.robar.aviso{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn);border-color:transparent}
+.fxrow .fxg{text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
+
+/* ---------- lista de pagos de inscripción ---------- */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:6px;margin-top:12px}
+.prow{
+  display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+  padding:7px 10px;font-size:13.5px;
+}
+.prow.ok{background:color-mix(in srgb,var(--good) 15%,transparent);border-color:transparent}
+.prow.ex{opacity:.45}
+.prow label{display:flex;align-items:center;gap:9px;cursor:pointer;min-width:0}
+.prow .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow.ok .nm{color:var(--good)}
+.prow .am{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+.prow .mini{
+  background:none;border:0;color:var(--muted);font-size:10.5px;padding:0 0 0 2px;
+  text-decoration:underline;text-underline-offset:2px;white-space:nowrap;
+}
+.prow .mini:hover{color:var(--ink)}
+
+/* ---------- el barco ---------- */
+.barcoHero{
+  background:linear-gradient(160deg, color-mix(in srgb,var(--accent) 22%,transparent), transparent 70%);
+  border:1px solid var(--border); border-radius:16px; padding:22px; margin-bottom:14px; text-align:center;
+}
+.barcoHero .obj{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.barcoHero .est{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px;line-height:1.15}
+.barcoHero .fra{font-size:14.5px;color:var(--ink-2);max-width:520px;margin:0 auto}
+.escala{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:18px 0 6px}
+.escala div{height:10px;border-radius:3px;background:var(--surface-3)}
+.escala div.ok{background:var(--good)}
+.escala div.yo{background:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 45%,transparent)}
+.escala div.no{background:color-mix(in srgb,var(--crit) 55%,transparent)}
+.escalaLbl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.chapa{
+  display:flex;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--grid);font-size:14.5px;
+}
+.chapa:last-child{border-bottom:0}
+.chapa b{font-size:19px;font-variant-numeric:tabular-nums;min-width:52px}
+
+/* ---------- fixture rows ---------- */
+.fxrow{
+  display:grid;grid-template-columns:1fr 46px 12px 46px 1fr 26px;gap:8px;align-items:center;
+  padding:6px 8px;border-radius:9px;font-size:13.5px;
+}
+.fxrow.mine{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.fxrow .tm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:560}
+.fxrow .tm.r{text-align:right}
+.fxrow .fxn{font-size:11px;text-align:center}
+.fxrow input{
+  width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:7px;
+  padding:5px 2px;text-align:center;color:var(--ink);font-size:14px;outline:none;-moz-appearance:textfield;
+}
+.fxrow input::-webkit-outer-spin-button,.fxrow input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.fxrow input:focus{border-color:var(--accent)}
+
+/* ---------- posts ---------- */
+.postgrid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:820px){.postgrid{grid-template-columns:300px 1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  background:var(--surface-2);border:1px solid var(--border);color:var(--ink-2);
+  border-radius:999px;padding:6px 12px;font-size:13px;font-weight:560;
+}
+.chip.on{background:var(--accent);color:#fff;border-color:transparent}
+#preview{width:100%;height:auto;border-radius:12px;display:block;box-shadow:var(--shadow);background:#000}
+.capbox{
+  width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+  padding:10px;color:var(--ink);font-size:13px;min-height:120px;resize:vertical;outline:none;line-height:1.5;
+}
+.toast{
+  position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);
+  background:var(--ink);color:var(--plane);padding:9px 16px;border-radius:999px;
+  font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.22s;z-index:100;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.hint{font-size:12.5px;color:var(--muted);line-height:1.5}
+@media(max-width:620px){
+  .rhead,.rrow{grid-template-columns:20px minmax(84px,1.3fr) 40px 40px 34px 34px 38px 54px;gap:4px}
+  .tile .v{font-size:24px}
+}
+</style>
+<script>window.__WJ_SEED__ = {"club": "Westjan FC", "emoji": "⚽", "marca": {"p": "#199e70", "s": "#0f1a15", "logo": null}, "cfg": {"cuota": 20, "cancha": 180, "formato": "F8"}, "torneo": {"nombre": "Superliga 8v8", "org": "PS23 Soccer", "inscripcion": 600, "inscCuota": 42, "inscPagada": true, "inscFecha": "2026-08-10", "inscPagos": {"y613zyn": true, "4s4r0gd": true, "sl5flf3": true, "or84ujh": true, "496d8oy": true, "4wfsql0": true, "tzrgmsr": true, "uzgkoqc": true, "pbl70nv": true, "wqltxgc": true, "u5sp0v0": true, "91pnh1w": true, "wqku4fe": true, "r0a1e3y": true}, "inscExentos": {"b6nmk7n": true, "tnqb5fk": true, "fedes1": true}, "fixture": [{"f": 1, "l": "Hollyviezo", "v": "Miami All Stars", "gl": 8, "gv": 0, "jugado": true}, {"f": 1, "l": "Dos Tokes", "v": "MSB", "gl": 4, "gv": 1, "jugado": true}, {"f": 1, "l": "Osito Mamboi", "v": "Patagonia", "gl": 6, "gv": 4, "jugado": true}, {"f": 1, "l": "Westjan FC", "v": "EasyChamp", "nota": "Postergado", "postergado": true}, {"f": 2, "l": "MSB", "v": "Patagonia", "gl": 4, "gv": 5, "jugado": true}, {"f": 2, "l": "Dos Tokes", "v": "Hollyviezo", "gl": 1, "gv": 9, "jugado": true}, {"f": 2, "l": "Osito Mamboi", "v": "EasyChamp", "gl": 9, "gv": 4, "jugado": true}, {"f": 2, "l": "Miami All Stars", "v": "Westjan FC", "gl": 4, "gv": 3, "jugado": true}, {"f": 3, "l": "MSB", "v": "EasyChamp", "gl": 3, "gv": 4, "jugado": true}, {"f": 3, "l": "Hollyviezo", "v": "Westjan FC", "gl": 7, "gv": 1, "jugado": true}, {"f": 3, "l": "Patagonia", "v": "Miami All Stars", "gl": 4, "gv": 5, "jugado": true}, {"f": 3, "l": "Dos Tokes", "v": "Osito Mamboi", "gl": 3, "gv": 5, "jugado": true}, {"f": 4, "l": "MSB", "v": "Hollyviezo"}, {"f": 4, "l": "Patagonia", "v": "EasyChamp"}, {"f": 4, "l": "Dos Tokes", "v": "Westjan FC"}, {"f": 4, "l": "Osito Mamboi", "v": "Miami All Stars"}, {"f": 5, "l": "MSB", "v": "Westjan FC"}, {"f": 5, "l": "EasyChamp", "v": "Miami All Stars"}, {"f": 5, "l": "Hollyviezo", "v": "Osito Mamboi"}, {"f": 5, "l": "Patagonia", "v": "Dos Tokes"}, {"f": 6, "l": "MSB", "v": "Miami All Stars"}, {"f": 6, "l": "Westjan FC", "v": "Osito Mamboi"}, {"f": 6, "l": "EasyChamp", "v": "Dos Tokes"}, {"f": 6, "l": "Hollyviezo", "v": "Patagonia"}, {"f": 7, "l": "MSB", "v": "Osito Mamboi"}, {"f": 7, "l": "Miami All Stars", "v": "Dos Tokes"}, {"f": 7, "l": "Westjan FC", "v": "Patagonia"}, {"f": 7, "l": "EasyChamp", "v": "Hollyviezo"}]}, "proximo": {"rival": "", "fecha": "", "hora": "20:30", "lugar": "", "convocados": []}, "jugadores": [{"id": "y613zyn", "nombre": "Bela", "activo": true}, {"id": "4s4r0gd", "nombre": "Tuma", "activo": true}, {"id": "sl5flf3", "nombre": "Herno", "activo": true}, {"id": "or84ujh", "nombre": "Hernan L", "activo": true}, {"id": "496d8oy", "nombre": "Caco", "activo": true}, {"id": "4wfsql0", "nombre": "Guti", "activo": true}, {"id": "tzrgmsr", "nombre": "Latigo", "activo": true}, {"id": "uzgkoqc", "nombre": "Nelo", "activo": true}, {"id": "pbl70nv", "nombre": "Keco", "activo": true}, {"id": "wqltxgc", "nombre": "Ivo", "activo": true}, {"id": "u5sp0v0", "nombre": "Nachito", "activo": true}, {"id": "91pnh1w", "nombre": "Ruso", "activo": true}, {"id": "wqku4fe", "nombre": "Toto", "activo": true}, {"id": "r0a1e3y", "nombre": "Auchi", "activo": true}, {"id": "b6nmk7n", "nombre": "Rafa", "activo": true}, {"id": "tnqb5fk", "nombre": "Sebi", "activo": true}, {"id": "fedes1", "nombre": "Fede S", "activo": true}], "partidos": [{"id": "arad99v", "fecha": "2026-08-18", "rival": "Miami All Stars", "torneo": "Superliga 8v8 · Fecha 2", "fx": 7, "gf": 3, "gc": 4, "cuota": 20, "cancha": 180, "asistentes": ["y613zyn", "4s4r0gd", "sl5flf3", "496d8oy", "4wfsql0", "tzrgmsr", "uzgkoqc", "pbl70nv", "wqltxgc", "r0a1e3y", "wqku4fe", "91pnh1w", "fedes1"], "eventos": {"y613zyn": {"g": 2}, "4wfsql0": {"am": 1}, "91pnh1w": {"am": 1}, "fedes1": {"g": 1, "a": 0, "am": 0, "rj": 0}}, "pagos": {"r0a1e3y": true, "91pnh1w": true, "wqltxgc": true, "4wfsql0": true, "496d8oy": true, "sl5flf3": true, "4s4r0gd": true, "uzgkoqc": true, "fedes1": false, "tzrgmsr": true, "pbl70nv": true, "wqku4fe": true, "y613zyn": true}, "mvp": "y613zyn", "notas": ""}, {"id": "m3", "fecha": "2026-08-25", "rival": "Hollyviezo", "torneo": "Superliga 8v8 · Fecha 3", "fx": 9, "gf": 1, "gc": 7, "cuota": 20, "cancha": 180, "asistentes": ["y613zyn", "4s4r0gd", "sl5flf3", "or84ujh", "496d8oy", "4wfsql0", "pbl70nv", "wqltxgc", "u5sp0v0", "91pnh1w", "wqku4fe"], "eventos": {"pbl70nv": {"g": 1}}, "pagos": {"4wfsql0": true, "4s4r0gd": true, "u5sp0v0": true, "sl5flf3": true, "91pnh1w": true}, "mvp": "pbl70nv", "notas": ""}], "mov": [], "bajasHechas": true, "abonos": [{"id": "ab1", "jid": "wqku4fe", "fecha": "2026-08-20", "monto": 20, "nota": "adelantó la Fecha 3"}, {"id": "ab2", "jid": "y613zyn", "fecha": "2026-08-24", "monto": 20, "nota": "adelantó la Fecha 3"}, {"id": "ab3", "jid": "wqltxgc", "fecha": "2026-08-26", "monto": 20, "nota": "pagó la Fecha 3"}]};</script>
+</head>
+<body>
+
+<header class="app">
+  <div class="wrap">
+    <div class="hrow">
+      <div class="crest" id="crest">⚽</div>
+      <div class="brand">
+        <input id="clubName" value="Westjan FC" spellcheck="false" aria-label="Nombre del equipo">
+        <div class="sub" id="hsub">Fútbol 8 · Fondo $0</div>
+      </div>
+      <div class="hbtns">
+        <button class="iconbtn" id="btnPub" title="Actualizar la página del equipo">🌐</button>
+        <button class="iconbtn" id="btnTheme" title="Tema claro/oscuro">◐</button>
+        <button class="iconbtn" id="btnData" title="Datos y respaldo">⋯</button>
+      </div>
+    </div>
+    <div id="roBar" class="robar" hidden></div>
+    <nav class="tabs" id="tabs">
+      <button data-t="resumen" class="on">Resumen</button>
+      <button data-t="torneo">Torneo</button>
+      <button data-t="barco">⛵ El Barco</button>
+      <button data-t="partidos">Partidos</button>
+      <button data-t="plantel">Plantel</button>
+      <button data-t="tesoreria">Tesorería</button>
+      <button data-t="gastos">Gastos</button>
+      <button data-t="posts">Posts IG</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="tab on" id="tab-resumen"></section>
+  <section class="tab" id="tab-torneo"></section>
+  <section class="tab" id="tab-barco"></section>
+  <section class="tab" id="tab-partidos"></section>
+  <section class="tab" id="tab-plantel"></section>
+  <section class="tab" id="tab-tesoreria"></section>
+  <section class="tab" id="tab-gastos"></section>
+  <section class="tab" id="tab-posts"></section>
+</main>
+
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   ESTADO
+   ========================================================= */
+const LOGO_SRC = "data:image/png;base64,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";
+const VER = "2026.08.26-2";
+/* Modo solo-lectura: el archivo público trae los datos congelados en window.__WJ_RO__ */
+const RO = typeof window!=="undefined" && !!window.__WJ_RO__;
+const RO_FECHA = (typeof window!=="undefined" && window.__WJ_FECHA__) || "";
+const NOS = "Westjan FC";
+const EQUIPOS = ["Hollyviezo","Dos Tokes","Osito Mamboi","EasyChamp","Westjan FC","Patagonia","MSB","Miami All Stars"];
+/* Fixture oficial Superliga 8v8 (PS23). La Fecha 1 se reconstruye desde la tabla
+   publicada: los tres partidos jugados + Westjan-EasyChamp postergado. */
+const FIXTURE = [
+  {f:1,l:"Hollyviezo",     v:"Miami All Stars", gl:8, gv:0, jugado:true},
+  {f:1,l:"Dos Tokes",      v:"MSB",             gl:4, gv:1, jugado:true},
+  {f:1,l:"Osito Mamboi",   v:"Patagonia",       gl:6, gv:4, jugado:true},
+  {f:1,l:"Westjan FC",     v:"EasyChamp",       nota:"Postergado", postergado:true},
+  {f:2,l:"MSB",            v:"Patagonia"},
+  {f:2,l:"Dos Tokes",      v:"Hollyviezo"},
+  {f:2,l:"Osito Mamboi",   v:"EasyChamp"},
+  {f:2,l:"Miami All Stars",v:"Westjan FC"},
+  {f:3,l:"MSB",            v:"Hollyviezo"},
+  {f:3,l:"Patagonia",      v:"EasyChamp"},
+  {f:3,l:"Dos Tokes",      v:"Westjan FC"},
+  {f:3,l:"Osito Mamboi",   v:"Miami All Stars"},
+  {f:4,l:"MSB",            v:"EasyChamp"},
+  {f:4,l:"Hollyviezo",     v:"Westjan FC"},
+  {f:4,l:"Patagonia",      v:"Miami All Stars"},
+  {f:4,l:"Dos Tokes",      v:"Osito Mamboi"},
+  {f:5,l:"MSB",            v:"Westjan FC"},
+  {f:5,l:"EasyChamp",      v:"Miami All Stars"},
+  {f:5,l:"Hollyviezo",     v:"Osito Mamboi"},
+  {f:5,l:"Patagonia",      v:"Dos Tokes"},
+  {f:6,l:"MSB",            v:"Miami All Stars"},
+  {f:6,l:"Westjan FC",     v:"Osito Mamboi"},
+  {f:6,l:"EasyChamp",      v:"Dos Tokes"},
+  {f:6,l:"Hollyviezo",     v:"Patagonia"},
+  {f:7,l:"MSB",            v:"Osito Mamboi"},
+  {f:7,l:"Miami All Stars",v:"Dos Tokes"},
+  {f:7,l:"Westjan FC",     v:"Patagonia"},
+  {f:7,l:"EasyChamp",      v:"Hollyviezo"}
+];
+/* Plantel y pagos migrados de la planilla "West Jan 2026".
+   Inscripción: $600 pagados al torneo, $42 por jugador, 8 al día ($336). */
+const PLANTEL = ["Bela","Tuma","Herno","Hernan L","Caco","Guti","Latigo","Nelo",
+                 "Keco","Ivo","Nachito","Ruso","Toto","Auchi"];
+const INSC_OK = [...PLANTEL];                       // los 14 ya pagaron la inscripción
+const BAJAS   = ["Bauti","Sebi"];                   // se los da de baja una sola vez
+const JUGADORES = PLANTEL.map((n,i)=>({ id:"p"+String(i+1).padStart(2,"0"), nombre:n, activo:true }));
+const PAGOS_INSC = Object.fromEntries(
+  JUGADORES.filter(j=>INSC_OK.includes(j.nombre)).map(j=>[j.id,true]));
+
+const DEF = {
+  club:NOS, emoji:"⚽",
+  marca:{ p:"#199e70", s:"#0f1a15", logo:null },
+  cfg:{ cuota:20, cancha:180, formato:"F8" },
+  torneo:{ nombre:"Superliga 8v8", org:"PS23 Soccer",
+           inscripcion:600, inscCuota:42, inscPagada:true, inscFecha:"",
+           inscPagos:structuredClone(PAGOS_INSC), inscExentos:{},
+           fixture:structuredClone(FIXTURE) },
+  proximo:{ rival:"", fecha:"", hora:"20:00", lugar:"" },
+  jugadores:structuredClone(JUGADORES), partidos:[], mov:[],  // mov = gastos e ingresos del fondo
+  abonos:[]                                                   // pagos por adelantado de un jugador
+};
+const KEY = "westjan-fc-v1";
+let S = null, MEM = null;
+
+function store(){
+  try{ localStorage.setItem("__t","1"); localStorage.removeItem("__t"); return localStorage; }
+  catch(e){ return null; }
+}
+const LS = store();
+function load(){
+  if(RO) return Object.assign(structuredClone(DEF), structuredClone(window.__WJ_RO__));
+  let raw = LS ? LS.getItem(KEY) : MEM;
+  // primera vez en este navegador: si el archivo trae datos de arranque, se usan
+  if(!raw && window.__WJ_SEED__) return Object.assign(structuredClone(DEF), structuredClone(window.__WJ_SEED__));
+  if(!raw) return structuredClone(DEF);
+  try{
+    const s = Object.assign(structuredClone(DEF), JSON.parse(raw));
+    s.torneo = Object.assign(structuredClone(DEF.torneo), s.torneo||{});
+    if(!Array.isArray(s.torneo.fixture) || !s.torneo.fixture.length) s.torneo.fixture = structuredClone(FIXTURE);
+    (s.jugadores||[]).forEach(j=>{                 // los jugadores ahora son sólo apodo
+      if(j.apodo && j.apodo.trim()) j.nombre = j.apodo.trim();
+      delete j.apodo; delete j.pos;
+    });
+    if(!s.bajasHechas){                            // baja única de Bauti y Sebi
+      const fuera = (s.jugadores||[]).filter(j=>BAJAS.includes(j.nombre)).map(j=>j.id);
+      if(fuera.length){
+        s.jugadores = s.jugadores.filter(j=>!fuera.includes(j.id));
+        fuera.forEach(id=>{
+          delete (s.torneo.inscPagos||{})[id];
+          delete (s.torneo.inscExentos||{})[id];
+          (s.partidos||[]).forEach(pt=>{
+            pt.asistentes=(pt.asistentes||[]).filter(x=>x!==id);
+            delete pt.eventos?.[id]; delete pt.pagos?.[id];
+            if(pt.mvp===id) pt.mvp=null;
+          });
+        });
+      }
+      s.bajasHechas = true;
+    }
+    return s;
+  } catch(e){ return structuredClone(DEF); }
+}
+function save(){
+  if(RO) return;
+  const raw = JSON.stringify(S);
+  if(LS){ try{ LS.setItem(KEY, raw); }catch(e){ MEM = raw; } } else MEM = raw;
+}
+const uid = () => Math.random().toString(36).slice(2,9);
+const $  = (s,r=document) => r.querySelector(s);
+const $$ = (s,r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => (n<0?"-":"") + "$" + Math.abs(Math.round(n*100)/100).toLocaleString("es-AR",{maximumFractionDigits:2});
+const hoy = () => new Date().toISOString().slice(0,10);
+function fdate(d){
+  if(!d) return "—";
+  const [y,m,dd] = d.split("-").map(Number);
+  return String(dd).padStart(2,"0")+"/"+String(m).padStart(2,"0")+"/"+String(y).slice(2);
+}
+function fdateLong(d){
+  if(!d) return "";
+  const [y,m,dd] = d.split("-").map(Number);
+  const dt = new Date(Date.UTC(y,m-1,dd));
+  const dias=["DOM","LUN","MAR","MIÉ","JUE","VIE","SÁB"];
+  const mes=["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SET","OCT","NOV","DIC"];
+  return dias[dt.getUTCDay()]+" "+dd+" "+mes[m-1];
+}
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("on");
+  clearTimeout(t._x); t._x=setTimeout(()=>t.classList.remove("on"),1900);
+}
+
+/* =========================================================
+   CÁLCULOS
+   ========================================================= */
+function ev(p, jid){
+  const e = p.eventos?.[jid] || {};
+  return { g:+e.g||0, a:+e.a||0, am:+e.am||0, rj:+e.rj||0 };
+}
+function matchFin(p){
+  const cuota = +p.cuota || S.cfg.cuota;
+  const cancha = +p.cancha || 0;
+  const pres = p.asistentes || [];
+  const pagos = p.pagos || {};
+  const devengado = pres.length * cuota;
+  const cobrado = pres.filter(id => pagos[id]).length * cuota;          // efectivo de esa fecha
+  const conCredito = pres.filter(id => !pagos[id] && cubiertoPorCredito(p.id, id)).length * cuota;
+  return {
+    cuota, cancha, n:pres.length, conCredito,
+    devengado, cobrado, porCobrar: devengado - cobrado - conCredito,
+    resultado: devengado - cancha,
+    breakeven: cuota>0 ? Math.ceil(cancha/cuota) : 0
+  };
+}
+function abonoDe(id){ return (S.abonos||[]).filter(a=>a.jid===id).reduce((t,a)=>t+(+a.monto||0),0); }
+/* Un adelanto cubre automáticamente las cuotas siguientes que no se pagaron en efectivo,
+   en orden cronológico. Devuelve, por jugador, qué partidos quedaron cubiertos y el sobrante. */
+function credito(id){
+  let disp = abonoDe(id);
+  const cubiertos = new Set();
+  ordenados().forEach(p=>{
+    if(!(p.asistentes||[]).includes(id)) return;
+    if(p.pagos?.[id]) return;                       // ya lo pagó en efectivo esa fecha
+    const c = +p.cuota || S.cfg.cuota;
+    if(disp >= c){ disp -= c; cubiertos.add(p.id); }
+  });
+  return { cubiertos, aFavor: disp, total: abonoDe(id) };
+}
+function cubiertoPorCredito(pid, jid){ return credito(jid).cubiertos.has(pid); }
+function ordenados(){
+  return [...S.partidos].sort((a,b)=> (a.fecha||"").localeCompare(b.fecha||"") || (a.id>b.id?1:-1));
+}
+/* ---- inscripción del torneo, prorrateada entre los jugadores activos ---- */
+function activos(){ return S.jugadores.filter(j=>j.activo!==false); }
+function exentoInsc(id){ return !!(S.torneo.inscExentos||{})[id]; }
+function pagoInsc(id){ return !!(S.torneo.inscPagos||{})[id]; }
+function participanInsc(){ return activos().filter(j=>!exentoInsc(j.id)); }
+function insc(){
+  const total = +S.torneo.inscripcion || 0;              // lo que se le pagó al torneo
+  const part = participanInsc();                          // a quiénes se les cobra
+  const n = part.length;
+  const cuota = +S.torneo.inscCuota || (n? total/n : 0);  // cuánto a cada uno
+  const pagaron = part.filter(j=>pagoInsc(j.id)).length;
+  return { total, n, cuota, pagaron,
+           exentos: activos().length - n,
+           cobrado: cuota*pagaron,
+           porCobrar: cuota*(n-pagaron),
+           recaudaTodo: cuota*n,
+           egreso: S.torneo.inscPagada!==false ? total : 0 };
+}
+function fondo(){
+  let cobrado=0, cancha=0, gastos=0, ingresos=0, porCobrar=0;
+  S.partidos.forEach(p=>{ const f=matchFin(p); cobrado+=f.cobrado; cancha+=f.cancha; porCobrar+=f.porCobrar; });
+  S.mov.forEach(m=>{ if(m.tipo==="gasto") gastos+=+m.monto||0; else ingresos+=+m.monto||0; });
+  const i = insc();
+  const abonos = (S.abonos||[]).reduce((t,a)=>t+(+a.monto||0),0);
+  cobrado += i.cobrado + abonos; porCobrar += i.porCobrar; gastos += i.egreso;
+  return { cobrado, cancha, gastos, ingresos, porCobrar, insc:i,
+           saldo: cobrado - cancha - gastos + ingresos,
+           proyectado: cobrado + porCobrar - cancha - gastos + ingresos };
+}
+/* ---- tabla de posiciones del torneo ---- */
+function tablaTorneo(){
+  const t={};
+  EQUIPOS.forEach(e=>t[e]={eq:e,pj:0,g:0,e:0,p:0,gf:0,gc:0,pts:0});
+  (S.torneo.fixture||[]).forEach(m=>{
+    if(!m.jugado || m.gl==null || m.gv==null) return;
+    const A=t[m.l], B=t[m.v]; if(!A||!B) return;
+    const gl=+m.gl, gv=+m.gv;
+    A.pj++; B.pj++; A.gf+=gl; A.gc+=gv; B.gf+=gv; B.gc+=gl;
+    if(gl>gv){ A.g++; B.p++; A.pts+=3; }
+    else if(gl<gv){ B.g++; A.p++; B.pts+=3; }
+    else { A.e++; B.e++; A.pts++; B.pts++; }
+  });
+  return Object.values(t).map(x=>({...x, dif:x.gf-x.gc}))
+    .sort((a,b)=> b.pts-a.pts || b.dif-a.dif || b.gf-a.gf || a.eq.localeCompare(b.eq));
+}
+function misFixtures(){ return (S.torneo.fixture||[]).filter(m=>m.l===NOS||m.v===NOS).sort((a,b)=>a.f-b.f); }
+function proximoFixture(){
+  const pend = misFixtures().filter(m=>!m.jugado);
+  return pend.find(m=>!m.postergado) || pend[0] || null;   // una postergada no es "la próxima"
+}
+function postergar(i){
+  const m = S.torneo.fixture[i];
+  m.postergado = !m.postergado;
+  m.nota = m.postergado? "Postergado" : "";
+  if(!m.nota) delete m.nota;
+  render(); toast(m.postergado? "Fecha "+m.f+" marcada como postergada" : "Fecha "+m.f+" vuelve al calendario");
+}
+function rivalDe(m){ return m.l===NOS? m.v : m.l; }
+function datosProx(m){                    // fecha/hora/cancha si están cargados para ese rival
+  const px = S.proximo||{};
+  if(!m || !px.rival || px.rival!==rivalDe(m)) return "";
+  const b=[];
+  if(px.fecha) b.push(fdateLong(px.fecha).replace(/^(\S+)/, x=>({DOM:"Domingo",LUN:"Lunes",MAR:"Martes","MIÉ":"Miércoles",JUE:"Jueves",VIE:"Viernes","SÁB":"Sábado"}[x]||x)));
+  if(px.hora)  b.push(px.hora+" hs");
+  if(px.lugar) b.push(px.lugar);
+  return b.join("  ·  ");
+}
+function esLocal(m){ return m.l===NOS; }
+function posicion(){
+  const t=tablaTorneo(); const i=t.findIndex(x=>x.eq===NOS);
+  return { pos:i+1, fila:t[i]||null, total:t.length };
+}
+function statsJugador(j){
+  let pj=0,g=0,a=0,am=0,rj=0,mvp=0,debe=0,pagado=0;
+  const cr = credito(j.id);
+  S.partidos.forEach(p=>{
+    if(!(p.asistentes||[]).includes(j.id)) return;
+    pj++;
+    const e = ev(p,j.id); g+=e.g; a+=e.a; am+=e.am; rj+=e.rj;
+    if(p.mvp===j.id) mvp++;
+    const c = +p.cuota || S.cfg.cuota;
+    if(p.pagos?.[j.id]) pagado+=c;
+    else if(cr.cubiertos.has(p.id)) pagado+=c;      // cubierto con un adelanto
+    else debe+=c;
+  });
+  const total = S.partidos.length;
+  const i = insc();
+  const cuentaInsc = j.activo!==false && !exentoInsc(j.id);
+  const debeInsc = (cuentaInsc && !pagoInsc(j.id)) ? i.cuota : 0;
+  const pgInsc   = (cuentaInsc &&  pagoInsc(j.id)) ? i.cuota : 0;
+  return { pj,g,a,am,rj,mvp,debe,pagado, total, debeInsc, pagoInsc:pgInsc, exentoInsc:exentoInsc(j.id),
+           aFavor: cr.aFavor, abonos: cr.total,
+           debeTotal: debe+debeInsc, pagadoTotal: pagado+pgInsc,
+           asist: total? Math.round(pj/total*100) : 0,
+           gpp: pj? g/pj : 0, part:g+a };
+}
+function record(){
+  let G=0,E=0,P=0,gf=0,gc=0;
+  S.partidos.forEach(p=>{
+    const f=+p.gf||0, c=+p.gc||0; gf+=f; gc+=c;
+    if(f>c)G++; else if(f===c)E++; else P++;
+  });
+  return {G,E,P,gf,gc,dif:gf-gc,pj:S.partidos.length};
+}
+function tablaGoleadores(){
+  return S.jugadores.map(j=>({j, s:statsJugador(j)}))
+    .filter(x=>x.s.g>0)
+    .sort((a,b)=> b.s.g-a.s.g || b.s.a-a.s.a || a.j.nombre.localeCompare(b.j.nombre));
+}
+function nombre(id){ const j=S.jugadores.find(x=>x.id===id); return j? j.nombre : "—"; }
+function nombreFull(id){ const j=S.jugadores.find(x=>x.id===id); return j? j.nombre : "—"; }
+function ultimoPartido(){ const o=ordenados(); return o.length? o[o.length-1] : null; }
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+let tab = "resumen";
+function render(){
+  $("#clubName").value = S.club;
+  const lg = S.marca?.logo || LOGO_SRC;
+  $("#crest").innerHTML = lg? `<img src="${lg}" alt="Escudo">` : esc(S.emoji||"⚽");
+  const f = fondo();
+  $("#hsub").innerHTML = esc(S.torneo.nombre) + " · Fondo <b class='"+(f.saldo<0?'neg':'pos')+"'>"+money(f.saldo)+"</b>"
+    + " <span style='opacity:.45'>· v"+VER+"</span>";
+  $$("#tabs button").forEach(b=>{
+    if(RO && ["gastos","posts"].includes(b.dataset.t)) b.hidden = true;
+    b.classList.toggle("on", b.dataset.t===tab);
+  });
+  if(!RO && location.protocol === "file:"){
+    const rb=$("#roBar"); rb.hidden=false; rb.className="robar aviso";
+    rb.innerHTML = '⚠️ Copia local — los datos de acá pueden estar viejos. Usá '+
+      '<a href="https://westjan-fc.netlify.app/admin.html" style="color:inherit">westjan-fc.netlify.app/admin.html</a>';
+  }
+  if(RO){
+    $("#btnData").hidden = true; $("#btnPub").hidden = true;
+    $("#clubName").readOnly = true; $("#clubName").style.pointerEvents="none";
+    const rb=$("#roBar"); rb.hidden=false;
+    rb.innerHTML = "Vista del equipo · solo lectura" + (RO_FECHA? " · datos al "+fdate(RO_FECHA) : "");
+  }
+  $$(".tab").forEach(s=>s.classList.toggle("on", s.id==="tab-"+tab));
+  ({resumen:vResumen, torneo:vTorneo, barco:vBarco, partidos:vPartidos, plantel:vPlantel,
+    tesoreria:vTesoreria, gastos:vGastos, posts:vPosts})[tab]();
+  save();
+}
+
+/* ---------- RESUMEN ---------- */
+function vResumen(){
+  const f = fondo(), r = record(), gol = tablaGoleadores();
+  const deudores = S.jugadores.map(j=>({j,s:statsJugador(j)})).filter(x=>x.s.debeTotal>0)
+    .sort((a,b)=>b.s.debeTotal-a.s.debeTotal);
+  const ult = ultimoPartido();
+  const maxG = gol.length? gol[0].s.g : 1;
+  const yo = posicion(), prox = proximoFixture();
+
+  let h = `<div class="tiles">
+    <div class="tile"><div class="k">Fondo del equipo</div>
+      <div class="v ${f.saldo<0?'neg':''}">${money(f.saldo)}</div>
+      <div class="n">${f.porCobrar>0? "+"+money(f.porCobrar)+" por cobrar" : "Todo cobrado"}</div></div>
+    <div class="tile"><div class="k">Posición</div><div class="v">${yo.pos}º</div>
+      <div class="n">${yo.fila?yo.fila.pts:0} pts · ${esc(S.torneo.nombre)}</div></div>
+    <div class="tile"><div class="k">Goles</div><div class="v">${r.gf}<span style="color:var(--muted);font-size:20px">:${r.gc}</span></div>
+      <div class="n">${r.pj} partidos · ${r.G}G ${r.E}E ${r.P}P</div></div>
+    <div class="tile"><div class="k">Plantel</div><div class="v">${S.jugadores.length}</div>
+      <div class="n">${deudores.length} con deuda</div></div>
+  </div>`;
+
+  if(prox){
+    h += `<div class="card"><div class="spread">
+      <div><div class="hint" style="text-transform:uppercase;letter-spacing:.04em;font-weight:650">Próximo partido · Fecha ${prox.f}</div>
+        <div style="font-size:20px;font-weight:700;margin-top:2px">${esLocal(prox)?"vs ":"visitante a "}${esc(rivalDe(prox))}</div>
+        <div class="hint">${esc(S.torneo.nombre)} · ${esc(S.torneo.org)}${prox.nota?" · "+esc(prox.nota):""}</div>
+        ${datosProx(prox)? `<div style="margin-top:6px;font-weight:650;color:var(--accent)">${esc(datosProx(prox))}</div>`:""}</div>
+      ${RO?"":`<button class="btn ghost sm" onclick="goTab('posts')">Hacer la placa</button>`}
+    </div></div>`;
+  }
+
+  if(!S.jugadores.length && !RO){
+    h += `<div class="card"><h2>Falta el plantel</h2>
+      <p class="hint" style="margin-top:0">El torneo todavía figura sin plantel confirmado. Cargá los nombres una vez
+      y ya podés anotar goles, asistencias y pagos en cada fecha.</p>
+      <p class="hint">La regla: <b>${money(S.cfg.cuota)}</b> por jugador por partido, cancha <b>${money(S.cfg.cancha)}</b>
+      — se cubre con <b>${Math.ceil(S.cfg.cancha/S.cfg.cuota)} jugadores</b> y lo que sobra queda en el fondo.</p>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" onclick="goTab('plantel')">Cargar plantel</button>
+        <button class="btn ghost" onclick="goTab('torneo')">Ver el torneo</button>
+      </div></div>`;
+  }
+
+  if(ult){
+    const f2 = matchFin(ult);
+    const res = ult.gf>ult.gc? "Victoria" : ult.gf===ult.gc? "Empate" : "Derrota";
+    const cls = ult.gf>ult.gc? "g" : ult.gf===ult.gc? "e" : "p";
+    h += `<div class="card"><h2>Último partido</h2>
+      <div class="spread">
+        <div><div style="font-size:15px;font-weight:650">vs ${esc(ult.rival||"Rival")}</div>
+          <div class="hint">${fdate(ult.fecha)} · ${f2.n} jugadores</div></div>
+        <div style="text-align:right">
+          <div style="font-size:26px;font-weight:700" class="tnum">${+ult.gf||0} - ${+ult.gc||0}</div>
+          <span class="pill ${cls}">${res}</span></div>
+      </div></div>`;
+  }
+
+  if(gol.length){
+    h += `<div class="card"><h2>Goleadores</h2><div class="bars">` +
+      gol.slice(0,8).map(x=>`<div class="bar">
+        <div class="lb">${esc(x.j.nombre)}</div>
+        <div class="tr"><div class="fl" style="width:${Math.max(3,x.s.g/maxG*100)}%"></div></div>
+        <div class="vv">${x.s.g}</div></div>`).join("") +
+      `</div><div class="hint" style="margin-top:10px">Goles en la temporada. Asistencias y demás en la pestaña Plantel.</div></div>`;
+  }
+
+  if(deudores.length){
+    h += `<div class="card"><h2>Pagos pendientes</h2><div class="tblwrap"><table>
+      <thead><tr><th>Apodo</th><th class="num">Fechas</th><th class="num">Debe</th></tr></thead><tbody>` +
+      deudores.map(x=>{
+        const fechas = S.partidos.filter(p=>(p.asistentes||[]).includes(x.j.id) && !p.pagos?.[x.j.id]).length;
+        return `<tr><td class="name">${esc(x.j.nombre)}${x.s.debeInsc>0?' <span class="hint">+ inscripción</span>':""}</td><td class="num">${fechas}</td>
+          <td class="num neg" style="font-weight:650">${money(x.s.debeTotal)}</td></tr>`;
+      }).join("") +
+      `<tr><td style="font-weight:650">Total</td><td></td><td class="num neg" style="font-weight:700">${money(f.porCobrar)}</td></tr>
+      </tbody></table></div></div>`;
+  }
+  $("#tab-resumen").innerHTML = h;
+}
+
+/* ---------- TORNEO ---------- */
+function vTorneo(){
+  const tabla = tablaTorneo(), yo = posicion(), prox = proximoFixture();
+  const mios = misFixtures();
+  const jugados = (S.torneo.fixture||[]).filter(m=>m.jugado).length;
+
+  let h = `<div class="tiles">
+    <div class="tile"><div class="k">Posición</div><div class="v">${yo.pos}º</div>
+      <div class="n">de ${yo.total} en ${esc(S.torneo.nombre)}</div></div>
+    <div class="tile"><div class="k">Puntos</div><div class="v">${yo.fila?yo.fila.pts:0}</div>
+      <div class="n">${yo.fila? yo.fila.g+"G · "+yo.fila.e+"E · "+yo.fila.p+"P":"sin jugar"}</div></div>
+    <div class="tile"><div class="k">Próxima fecha</div><div class="v" style="font-size:20px;padding-top:6px">${prox? "Fecha "+prox.f : "—"}</div>
+      <div class="n">${prox? (esLocal(prox)?"vs ":"visitante a ")+esc(rivalDe(prox)) : "Torneo terminado"}</div></div>
+    <div class="tile"><div class="k">Fixture</div><div class="v">${jugados}<span style="color:var(--muted);font-size:20px">/${(S.torneo.fixture||[]).length}</span></div>
+      <div class="n">partidos con resultado</div></div>
+  </div>`;
+
+  h += `<div class="card"><h2>Tabla de posiciones</h2><div class="tblwrap"><table>
+    <thead><tr><th>#</th><th>Equipo</th><th class="num">PJ</th><th class="num">G</th><th class="num">E</th><th class="num">P</th>
+    <th class="num">GF</th><th class="num">GC</th><th class="num">DIF</th><th class="num">PTS</th></tr></thead><tbody>` +
+    tabla.map((r,i)=>{
+      const yoRow = r.eq===NOS;
+      return `<tr style="${yoRow?"background:color-mix(in srgb,var(--accent) 14%,transparent)":""}">
+        <td class="hint">${i+1}</td>
+        <td class="name">${esc(r.eq)}${yoRow?' <span class="pill g">nosotros</span>':""}</td>
+        <td class="num">${r.pj}</td><td class="num">${r.g}</td><td class="num">${r.e}</td><td class="num">${r.p}</td>
+        <td class="num">${r.gf}</td><td class="num">${r.gc}</td>
+        <td class="num">${r.dif>0?"+":""}${r.dif}</td>
+        <td class="num" style="font-weight:700">${r.pts}</td></tr>`;
+    }).join("") + `</tbody></table></div>
+    <div class="hint" style="margin-top:10px">${RO? "Se actualiza con cada resultado que carga el DT. Fuente del fixture: "+esc(S.torneo.org)+"."
+      : "Se calcula sola con los resultados que cargues abajo. La Fecha 1 ya viene con lo publicado por "+esc(S.torneo.org)+"."}</div></div>`;
+
+  h += `<div class="card"><h2>Nuestro camino</h2><div class="tblwrap"><table>
+    <thead><tr><th>Fecha</th><th>Rival</th><th>Condición</th><th class="num">Resultado</th><th></th></tr></thead><tbody>` +
+    mios.map(m=>{
+      const r = m.jugado? (esLocal(m)? [+m.gl,+m.gv] : [+m.gv,+m.gl]) : null;
+      const cls = !r? "" : r[0]>r[1]?"g" : r[0]===r[1]?"e":"p";
+      const lbl = !r? (m.nota||"pendiente") : r[0]>r[1]?"G" : r[0]===r[1]?"E":"P";
+      const i = S.torneo.fixture.indexOf(m);
+      return `<tr${m.postergado&&!m.jugado?' style="opacity:.55"':""}><td class="hint">Fecha ${m.f}</td>
+        <td class="name">${esc(rivalDe(m))}</td>
+        <td class="hint">${esLocal(m)?"Local":"Visitante"}</td>
+        <td class="num" style="font-weight:650">${r? r[0]+" - "+r[1] : "—"}</td>
+        <td class="num"><span class="pill ${cls||'e'}">${lbl}</span>${
+          (!RO && !m.jugado)? ` <button class="btn ghost sm" style="margin-left:6px" onclick="postergar(${i})">${m.postergado?"reactivar":"postergar"}</button>`:""}</td></tr>`;
+    }).join("") + `</tbody></table></div></div>`;
+
+  // fixture completo editable
+  const porFecha = {};
+  (S.torneo.fixture||[]).forEach((m,idx)=>{ (porFecha[m.f]=porFecha[m.f]||[]).push({m,idx}); });
+  h += `<div class="card"><h2>${RO?"Fixture completo":"Cargar resultados"}</h2>` +
+    Object.keys(porFecha).sort((a,b)=>a-b).map(f=>`
+      <div style="margin-bottom:16px">
+        <div class="hint" style="font-weight:700;color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Fecha ${f}</div>
+        ${porFecha[f].map(({m,idx})=>`
+          <div class="fxrow ${(m.l===NOS||m.v===NOS)?"mine":""}">
+            <span class="tm r">${esc(m.l)}</span>
+            ${RO? `<span class="fxg">${m.gl??"–"}</span><span class="hint">–</span><span class="fxg">${m.gv??"–"}</span>`
+                : `<input type="number" min="0" value="${m.gl??""}" placeholder="–" oninput="setFx(${idx},'gl',this.value)">
+                   <span class="hint">–</span>
+                   <input type="number" min="0" value="${m.gv??""}" placeholder="–" oninput="setFx(${idx},'gv',this.value)">`}
+            <span class="tm">${esc(m.v)}</span>
+            <span class="hint fxn">${m.nota? esc(m.nota) : (m.jugado?"✓":"")}</span>
+          </div>`).join("")}
+      </div>`).join("") +
+    `<div class="hint">${RO?"Los resultados los carga el DT después de cada fecha.":"Poné los dos goles y el partido cuenta para la tabla. Dejá vacío para borrarlo."}</div></div>`;
+  $("#tab-torneo").innerHTML = h;
+}
+function setFx(i,k,v){
+  const m = S.torneo.fixture[i];
+  m[k] = v===""? null : Math.max(0,+v||0);
+  m.jugado = (m.gl!=null && m.gv!=null);
+  if(m.jugado) delete m.nota;
+  save();
+  // refresco sólo la tabla para no perder el foco del input
+  const t = $("#tab-torneo .card table tbody");
+  if(t){ const tabla=tablaTorneo();
+    t.innerHTML = tabla.map((r,ix)=>{
+      const yoRow = r.eq===NOS;
+      return `<tr style="${yoRow?"background:color-mix(in srgb,var(--accent) 14%,transparent)":""}">
+        <td class="hint">${ix+1}</td><td class="name">${esc(r.eq)}${yoRow?' <span class="pill g">nosotros</span>':""}</td>
+        <td class="num">${r.pj}</td><td class="num">${r.g}</td><td class="num">${r.e}</td><td class="num">${r.p}</td>
+        <td class="num">${r.gf}</td><td class="num">${r.gc}</td><td class="num">${r.dif>0?"+":""}${r.dif}</td>
+        <td class="num" style="font-weight:700">${r.pts}</td></tr>`;
+    }).join("");
+  }
+}
+
+/* ---------- EL BARCO ---------- */
+const BIRRA = 4;                       // precio de una birra, para el escabiómetro
+const CABALAS = [
+  "El que no salta se queda en el muelle.",
+  "Cábala nueva: el que llega tarde paga la primera ronda.",
+  "Si no lo ganamos jugando, lo ganamos corriendo.",
+  "Nadie se baja del barco antes de zarpar.",
+  "El que dice «no llegamos» rema de ida y de vuelta.",
+  "Se juega como se entrena. Nosotros no entrenamos. Igual se juega.",
+  "Hay equipo. Falta plata, pero hay equipo."
+];
+function barcoDatos(){
+  const t = tablaTorneo(), yo = posicion(), f = fondo();
+  const fila = yo.fila || {pts:0,pj:0};
+  const restantes = Math.max(0, 7 - fila.pj);
+  const enJuego = restantes*3;
+  const sexto = t[5], septimo = t[6];
+  const dentro = yo.pos <= 6;
+  const margen = dentro ? fila.pts - (septimo? septimo.pts : 0)
+                        : (sexto? sexto.pts : 0) - fila.pts;
+  const birras = Math.floor(f.saldo / BIRRA);
+  const birrasProy = Math.floor(f.proyectado / BIRRA);
+  return {t, yo, fila, restantes, enJuego, dentro, margen, f, birras, birrasProy,
+          sinJugar: fila.pj === 0};
+}
+function vBarco(){
+  const d = barcoDatos();
+  const {yo, fila, restantes, enJuego, dentro, margen, f} = d;
+  let est, fra;
+  if(d.sinJugar){
+    est = "El barco está en el puerto";
+    fra = "Todavía no jugamos nada. La buena: nadie nos ganó. La mala: tampoco le ganamos a nadie.";
+  } else if(yo.pos <= 2){
+    est = "Esto ya no es el barco, es un crucero";
+    fra = "Vamos "+yo.pos+"º. Ojo con agrandarse, que después viene la pálida.";
+  } else if(dentro){
+    est = "Estamos arriba del barco";
+    fra = yo.pos+"º con "+fila.pts+" puntos, "+(margen>0? margen+" arriba del séptimo" : "empatados con el séptimo")+". No aflojen que faltan "+restantes+" fecha"+(restantes===1?"":"s")+".";
+  } else {
+    est = "Por ahora, mirando desde el muelle";
+    fra = yo.pos+"º. Faltan "+margen+" punto"+(margen===1?"":"s")+" para meterse entre los 6, y quedan "+enJuego+" en juego. Se puede.";
+  }
+
+  let h = `<div class="barcoHero">
+    <div class="obj">Objetivo · Top 6 = Playoffs</div>
+    <div class="est">${esc(est)}</div>
+    <div class="fra">${esc(fra)}</div>
+    <div class="escala">${d.t.map((r,i)=>`<div class="${r.eq===NOS? "yo" : i<6? "ok":"no"}" title="${esc(r.eq)}"></div>`).join("")}</div>
+    <div class="escalaLbl"><span>1º</span><span style="color:var(--good)">◀ clasifican ▶</span><span>8º</span></div>
+  </div>`;
+
+  h += `<div class="tiles">
+    <div class="tile"><div class="k">Puesto</div><div class="v">${yo.pos}º</div>
+      <div class="n">${dentro? "adentro" : "afuera por "+margen+" pts"}</div></div>
+    <div class="tile"><div class="k">Fechas que quedan</div><div class="v">${restantes}</div>
+      <div class="n">${enJuego} puntos en juego</div></div>
+    <div class="tile"><div class="k">Caja para el escabio</div><div class="v ${f.saldo<0?'neg':'pos'}">${money(f.saldo)}</div>
+      <div class="n">${d.birras>=0? d.birras+" birras" : "debemos "+Math.abs(d.birras)+" birras"}</div></div>
+    <div class="tile"><div class="k">Si cobramos todo</div><div class="v ${f.proyectado<0?'neg':'pos'}">${money(f.proyectado)}</div>
+      <div class="n">${d.birrasProy>=0? d.birrasProy+" birras" : "seguimos en rojo"}</div></div>
+  </div>`;
+
+  h += `<div class="card"><h2>La cuenta fría</h2>
+    <div class="chapa"><b>${fila.pts}</b><span>puntos tenemos hoy${d.sinJugar?" (todos los que trajimos de casa)":""}.</span></div>
+    <div class="chapa"><b>${enJuego}</b><span>puntos quedan por repartir en las ${restantes} fecha${restantes===1?"":"s"} que faltan.</span></div>
+    <div class="chapa"><b>${dentro? "+"+margen : "−"+margen}</b><span>${dentro? "puntos de ventaja sobre el 7º. Eso es lo que separa el barco del muelle." : "puntos hay que remontar para entrar. Dos triunfos y estamos hablando de otra cosa."}</span></div>
+    <div class="chapa"><b>${money(S.cfg.cuota)}</b><span>por cabeza por partido. El que no viene igual no paga, pero después no pida lugar en la cubierta.</span></div>
+  </div>`;
+
+  const deudores = S.jugadores.map(j=>({j,s:statsJugador(j)})).filter(x=>x.s.debeTotal>0)
+    .sort((a,b)=>b.s.debeTotal-a.s.debeTotal);
+  if(deudores.length){
+    h += `<div class="card"><h2>Los que reman para el otro lado</h2>
+      <div class="hint" style="margin-top:-4px">Deben plata. El barco no zarpa con agujeros en el casco.</div>
+      <div class="tblwrap"><table><tbody>` +
+      deudores.map((x,i)=>`<tr><td class="hint">${i+1}</td><td class="name">${esc(x.j.nombre)}</td>
+        <td class="num neg" style="font-weight:650">${money(x.s.debeTotal)}</td>
+        <td class="hint num">${Math.round(x.s.debeTotal/BIRRA)} birras</td></tr>`).join("") +
+      `<tr><td></td><td style="font-weight:700">Total del agujero</td>
+        <td class="num neg" style="font-weight:700">${money(f.porCobrar)}</td>
+        <td class="hint num">${Math.round(f.porCobrar/BIRRA)} birras</td></tr>
+      </tbody></table></div></div>`;
+  } else {
+    h += `<div class="card"><h2>Los que reman para el otro lado</h2>
+      <div class="empty">Nadie debe un peso. Anotalo, porque no va a volver a pasar.</div></div>`;
+  }
+
+  const prox = proximoFixture();
+  if(prox){
+    h += `<div class="card"><h2>La próxima parada</h2>
+      <div class="spread">
+        <div><div style="font-size:19px;font-weight:700">${esLocal(prox)?"vs ":"visitante a "}${esc(rivalDe(prox))}</div>
+          <div class="hint">Fecha ${prox.f} · ${esc(S.torneo.nombre)}</div>
+          ${datosProx(prox)? `<div style="margin-top:6px;font-weight:650;color:var(--accent)">${esc(datosProx(prox))}</div>`:""}</div>
+        <div class="hint" style="text-align:right;max-width:200px">Ganás, sumás 3 y el barco se acerca. Perdés y bancate los memes del grupo.</div>
+      </div></div>`;
+  }
+
+  const cab = CABALAS[(S.partidos.length + (S.jugadores.length||0)) % CABALAS.length];
+  h += `<div class="card" style="text-align:center">
+    <div class="hint" style="text-transform:uppercase;letter-spacing:.1em;font-weight:700">Cábala de la semana</div>
+    <div style="font-size:17px;font-weight:650;margin-top:8px">"${esc(cab)}"</div></div>`;
+
+  $("#tab-barco").innerHTML = h;
+}
+
+/* ---------- PARTIDOS ---------- */
+function vPartidos(){
+  const ps = ordenados().reverse();
+  let h = `<div class="card"><div class="spread">
+      <div><h2 style="margin:0">Partidos</h2><div class="hint">${ps.length} cargados</div></div>
+      ${RO?"":`<button class="btn" onclick="editMatch()">+ Nuevo partido</button>`}
+    </div></div>`;
+
+  if(!ps.length){
+    h += `<div class="card"><div class="empty">Todavía no cargaste ningún partido.</div></div>`;
+  } else {
+    h += ps.map(p=>{
+      const f = matchFin(p);
+      const cls = p.gf>p.gc? "g" : p.gf===p.gc? "e" : "p";
+      const txt = p.gf>p.gc? "G" : p.gf===p.gc? "E" : "P";
+      const scorers = (p.asistentes||[]).map(id=>({id,g:ev(p,id).g})).filter(x=>x.g>0)
+        .sort((a,b)=>b.g-a.g).map(x=>nombre(x.id)+(x.g>1?" ×"+x.g:"")).join(", ");
+      return `<div class="card">
+        <div class="spread" style="align-items:flex-start">
+          <div style="min-width:0">
+            <div class="row" style="gap:8px">
+              <span class="pill ${cls}">${txt}</span>
+              <span style="font-weight:650;font-size:15px">vs ${esc(p.rival||"Rival")}</span>
+              <span class="tnum" style="font-weight:700">${+p.gf||0}-${+p.gc||0}</span>
+            </div>
+            <div class="hint" style="margin-top:5px">${fdate(p.fecha)} · ${esc(p.torneo||"Amistoso")} · ${f.n} jugadores${p.mvp?" · MVP "+esc(nombre(p.mvp)):""}</div>
+            ${scorers?`<div class="hint">⚽ ${esc(scorers)}</div>`:""}
+          </div>
+          <div style="text-align:right;flex:none">
+            <div class="tnum ${f.resultado<0?'neg':'pos'}" style="font-weight:650;font-size:15px">${f.resultado>=0?"+":""}${money(f.resultado)}</div>
+            <div class="hint">${money(f.devengado)} − ${money(f.cancha)}</div>
+            ${f.porCobrar>0?`<div class="hint neg">${money(f.porCobrar)} sin cobrar</div>`:`<div class="hint pos">cobrado ✓</div>`}
+          </div>
+        </div>
+        <div class="meter">
+          <div class="tr"><div class="fl ${f.n>=f.breakeven?'ok':''}" style="width:${Math.min(100,f.breakeven? f.n/f.breakeven*100:0)}%"></div></div>
+          <div class="lg"><span>${f.n} de ${f.breakeven} para cubrir la cancha</span><span></span></div>
+        </div>
+        ${RO?"":`<div class="row" style="margin-top:12px">
+          <button class="btn ghost sm" onclick="editMatch('${p.id}')">Editar</button>
+          <button class="btn ghost sm" onclick="cobrarTodo('${p.id}')">Marcar todo pagado</button>
+          <button class="btn danger sm" onclick="delMatch('${p.id}')">Borrar</button>
+        </div>`}
+      </div>`;
+    }).join("");
+  }
+  $("#tab-partidos").innerHTML = h;
+}
+
+function delMatch(id){
+  if(!confirm("¿Borrar este partido? Se pierden sus estadísticas y pagos.")) return;
+  S.partidos = S.partidos.filter(p=>p.id!==id); render(); toast("Partido borrado");
+}
+function cobrarTodo(id){
+  const p = S.partidos.find(x=>x.id===id); if(!p) return;
+  p.pagos = p.pagos || {};
+  (p.asistentes||[]).forEach(j=>p.pagos[j]=true);
+  render(); toast("Cobrado a todos los presentes");
+}
+
+/* ---------- editor de partido ---------- */
+let draft = null;
+function editMatch(id){
+  const px = proximoFixture();
+  const base = id ? structuredClone(S.partidos.find(p=>p.id===id)) : {
+    id:uid(), fecha:hoy(), rival: px? rivalDe(px):"", torneo: px? S.torneo.nombre+" · Fecha "+px.f : "Amistoso",
+    fx: px? S.torneo.fixture.indexOf(px) : null, gf:0, gc:0,
+    cuota:S.cfg.cuota, cancha:S.cfg.cancha, asistentes:[], eventos:{}, pagos:{}, mvp:null, notas:""
+  };
+  base.eventos = base.eventos||{}; base.pagos = base.pagos||{}; base.asistentes = base.asistentes||[];
+  draft = base;
+  if(!S.jugadores.length){ toast("Primero cargá el plantel"); goTab("plantel"); return; }
+  openModal(matchForm());
+}
+function matchForm(){
+  const d = draft;
+  const f = matchFin(d);
+  return `<h2>${S.partidos.some(p=>p.id===d.id)?"Editar partido":"Nuevo partido"}</h2>
+  <label class="f" style="margin-bottom:12px">Fecha del torneo
+    <select id="m-fx" onchange="pickFx(this.value)">
+      <option value="">Amistoso / fuera del torneo</option>
+      ${misFixtures().map(m=>{
+        const i = S.torneo.fixture.indexOf(m);
+        return `<option value="${i}" ${d.fx===i?"selected":""}>Fecha ${m.f} · ${esLocal(m)?"vs":"visitante a"} ${esc(rivalDe(m))}${m.jugado&&d.fx!==i?" (cargada)":""}</option>`;
+      }).join("")}
+    </select></label>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin-bottom:14px">
+    <label class="f">Fecha<input type="date" id="m-fecha" value="${d.fecha||""}"></label>
+    <label class="f">Rival<input id="m-rival" value="${esc(d.rival)}" placeholder="Los Pibes FC"></label>
+    <label class="f">Torneo<input id="m-torneo" value="${esc(d.torneo)}" placeholder="Amistoso"></label>
+    <label class="f">Goles a favor<input type="number" id="m-gf" min="0" value="${+d.gf||0}"></label>
+    <label class="f">Goles en contra<input type="number" id="m-gc" min="0" value="${+d.gc||0}"></label>
+    <label class="f">Cuota por jugador<input type="number" id="m-cuota" min="0" step="1" value="${+d.cuota}"></label>
+    <label class="f">Costo cancha<input type="number" id="m-cancha" min="0" step="1" value="${+d.cancha}"></label>
+  </div>
+
+  <div class="card" style="background:var(--surface-2);margin-bottom:14px">
+    <div class="spread"><span style="font-weight:650" id="m-sum">${f.n} presentes · ${money(f.devengado)} vs ${money(f.cancha)}</span>
+      <span id="m-res" style="font-weight:700" class="${f.resultado<0?'neg':'pos'}">${f.resultado>=0?"+":""}${money(f.resultado)}</span></div>
+    <div class="meter"><div class="tr"><div class="fl ${f.n>=f.breakeven?'ok':''}" id="m-meter" style="width:${Math.min(100,f.breakeven?f.n/f.breakeven*100:0)}%"></div></div>
+      <div class="lg"><span id="m-be">${f.n} de ${f.breakeven} para cubrir</span></div></div>
+  </div>
+
+  <div class="row" style="margin-bottom:8px">
+    <button class="btn ghost sm" onclick="toggleAll(true)">Marcar todos</button>
+    <button class="btn ghost sm" onclick="toggleAll(false)">Ninguno</button>
+    <button class="btn ghost sm" onclick="payAll()">Todos pagaron</button>
+  </div>
+  <div class="rost">
+    <div class="rhead"><span></span><span>Apodo</span><span>⚽</span><span>👟</span><span>🟨</span><span>🟥</span><span>MVP</span><span>Pagó</span></div>
+    <div id="rostBody">${rosterRows()}</div>
+  </div>
+  <div class="sticky-actions">
+    <button class="btn ghost" onclick="closeModal()">Cancelar</button>
+    <button class="btn" onclick="saveMatch()">Guardar partido</button>
+  </div>`;
+}
+function pickFx(v){
+  if(v===""){ draft.fx=null; return; }
+  const i = +v, m = S.torneo.fixture[i];
+  draft.fx = i; draft.rival = rivalDe(m); draft.torneo = S.torneo.nombre+" · Fecha "+m.f;
+  $("#m-rival").value = draft.rival; $("#m-torneo").value = draft.torneo;
+}
+function rosterRows(){
+  const d = draft;
+  return S.jugadores.filter(j=>j.activo!==false).map(j=>{
+    const on = d.asistentes.includes(j.id);
+    const e = ev(d,j.id);
+    return `<div class="rrow ${on?"":"off"}" data-j="${j.id}">
+      <span class="ctr"><input type="checkbox" ${on?"checked":""} onchange="tgAsist('${j.id}',this.checked)"></span>
+      <span class="nm">${esc(j.nombre)}</span>
+      <input type="number" min="0" value="${e.g}"  oninput="setEv('${j.id}','g',this.value)"  ${on?"":"disabled"}>
+      <input type="number" min="0" value="${e.a}"  oninput="setEv('${j.id}','a',this.value)"  ${on?"":"disabled"}>
+      <input type="number" min="0" value="${e.am}" oninput="setEv('${j.id}','am',this.value)" ${on?"":"disabled"}>
+      <input type="number" min="0" value="${e.rj}" oninput="setEv('${j.id}','rj',this.value)" ${on?"":"disabled"}>
+      <span class="ctr"><input type="radio" name="mvp" ${d.mvp===j.id?"checked":""} onchange="draft.mvp='${j.id}'" ${on?"":"disabled"}></span>
+      <button class="paychip ${d.pagos[j.id]?"on":""}" onclick="tgPago('${j.id}')" ${on?"":"disabled"}>${d.pagos[j.id]?"✓ Sí":"No"}</button>
+    </div>`;
+  }).join("") || `<div class="empty">No hay jugadores activos.</div>`;
+}
+function tgAsist(id,on){
+  const d=draft;
+  if(on){ if(!d.asistentes.includes(id)) d.asistentes.push(id); }
+  else { d.asistentes = d.asistentes.filter(x=>x!==id); delete d.pagos[id]; if(d.mvp===id) d.mvp=null; }
+  syncDraftForm(); $("#rostBody").innerHTML = rosterRows(); refreshSum();
+}
+function setEv(id,k,v){ draft.eventos[id] = draft.eventos[id]||{}; draft.eventos[id][k] = Math.max(0,+v||0); }
+function tgPago(id){ draft.pagos[id] = !draft.pagos[id]; $("#rostBody").innerHTML = rosterRows(); refreshSum(); }
+function toggleAll(on){
+  draft.asistentes = on ? S.jugadores.filter(j=>j.activo!==false).map(j=>j.id) : [];
+  if(!on){ draft.pagos={}; draft.mvp=null; }
+  $("#rostBody").innerHTML = rosterRows(); refreshSum();
+}
+function payAll(){ draft.asistentes.forEach(id=>draft.pagos[id]=true); $("#rostBody").innerHTML = rosterRows(); refreshSum(); }
+function syncDraftForm(){
+  const g = id => $("#"+id);
+  if(!g("m-fecha")) return;
+  const fxv = g("m-fx") ? g("m-fx").value : "";
+  draft.fx = fxv===""? null : +fxv;
+  draft.fecha=g("m-fecha").value; draft.rival=g("m-rival").value; draft.torneo=g("m-torneo").value;
+  draft.gf=+g("m-gf").value||0; draft.gc=+g("m-gc").value||0;
+  draft.cuota=+g("m-cuota").value||0; draft.cancha=+g("m-cancha").value||0;
+}
+function refreshSum(){
+  syncDraftForm();
+  const f = matchFin(draft);
+  $("#m-sum").textContent = f.n+" presentes · "+money(f.devengado)+" vs "+money(f.cancha);
+  const r=$("#m-res"); r.textContent=(f.resultado>=0?"+":"")+money(f.resultado);
+  r.className = f.resultado<0?"neg":"pos"; r.style.fontWeight="700";
+  const m=$("#m-meter"); m.style.width=Math.min(100,f.breakeven? f.n/f.breakeven*100:0)+"%";
+  m.classList.toggle("ok", f.n>=f.breakeven);
+  $("#m-be").textContent = f.n+" de "+f.breakeven+" para cubrir";
+}
+function saveMatch(){
+  syncDraftForm();
+  if(!draft.rival.trim()) draft.rival = "Rival";
+  const i = S.partidos.findIndex(p=>p.id===draft.id);
+  if(i>=0) S.partidos[i]=draft; else S.partidos.push(draft);
+  S.cfg.cuota = draft.cuota; S.cfg.cancha = draft.cancha;
+  if(draft.fx!=null){                       // se refleja en la tabla del torneo
+    const m = S.torneo.fixture[draft.fx];
+    if(m){ const loc = esLocal(m);
+      m.gl = loc? draft.gf : draft.gc;
+      m.gv = loc? draft.gc : draft.gf;
+      m.jugado = true; delete m.nota;
+    }
+  }
+  closeModal(); render(); toast(draft.fx!=null? "Partido guardado y tabla actualizada" : "Partido guardado");
+}
+
+/* ---------- PLANTEL ---------- */
+let sortKey="g", sortDir=-1;
+function vPlantel(){
+  const rows = S.jugadores.map(j=>({j,s:statsJugador(j)}));
+  rows.sort((a,b)=>{
+    if(sortKey==="nombre") return sortDir * a.j.nombre.localeCompare(b.j.nombre);
+    return sortDir * ((a.s[sortKey]||0)-(b.s[sortKey]||0)) || a.j.nombre.localeCompare(b.j.nombre);
+  });
+  const cols = [["nombre","Apodo",0],["pj","PJ",1],["asist","Asist %",1],["g","⚽",1],["a","👟",1],
+                ["part","G+A",1],["gpp","G/PJ",1],["am","🟨",1],["rj","🟥",1],["mvp","MVP",1],["debeTotal","Debe",1]];
+  let h = RO? "" : `<div class="card"><h2>Agregar jugador</h2>
+    <div class="row">
+      <label class="f" style="flex:1;min-width:200px">Apodo<input id="j-nom" placeholder="Juancho" onkeydown="if(event.key==='Enter')addPlayer()"></label>
+      <button class="btn" onclick="addPlayer()" style="align-self:flex-end">Agregar</button>
+    </div>
+    <details style="margin-top:12px"><summary class="hint" style="cursor:pointer">Cargar varios de una vez</summary>
+      <p class="hint" style="margin:8px 0">Un apodo por línea.</p>
+      <textarea class="capbox" id="j-bulk" style="min-height:110px" placeholder="Juancho&#10;Tincho&#10;Diegol&#10;Seba"></textarea>
+      <button class="btn sm" style="margin-top:8px" onclick="addBulk()">Cargar lista</button>
+    </details></div>`;
+
+  h += `<div class="card"><h2>Estadísticas · ${rows.length} jugadores</h2><div class="tblwrap"><table>
+    <thead><tr>` + cols.map(c=>`<th class="sortable ${c[2]?'num':''}" onclick="sortBy('${c[0]}')">${c[1]}${sortKey===c[0]?(sortDir<0?" ↓":" ↑"):""}</th>`).join("") + (RO?"":`<th></th>`) + `</tr></thead><tbody>` +
+    (rows.length? rows.map(({j,s})=>`<tr ${j.activo===false?'style="opacity:.45"':""}>
+      <td class="name">${esc(j.nombre)}${j.activo===false?' <span class="hint">· inactivo</span>':""}</td>
+      <td class="num">${s.pj}</td><td class="num">${s.asist}%</td>
+      <td class="num" style="font-weight:650">${s.g}</td><td class="num">${s.a}</td>
+      <td class="num">${s.part}</td><td class="num">${s.gpp.toFixed(2)}</td>
+      <td class="num">${s.am||"—"}</td><td class="num">${s.rj||"—"}</td><td class="num">${s.mvp||"—"}</td>
+      <td class="num ${s.debeTotal>0?'neg':'pos'}" style="font-weight:650">${s.debeTotal>0?money(s.debeTotal):"al día"}</td>
+      ${RO?"":`<td class="num"><button class="btn ghost sm" onclick="editPlayer('${j.id}')">···</button></td>`}
+    </tr>`).join("") : `<tr><td colspan="12"><div class="empty">${RO?"Todavía no hay plantel cargado.":"Agregá tu primer jugador arriba."}</div></td></tr>`) +
+    `</tbody></table></div></div>`;
+  $("#tab-plantel").innerHTML = h;
+}
+function sortBy(k){ if(sortKey===k) sortDir*=-1; else { sortKey=k; sortDir = k==="nombre"?1:-1; } render(); }
+function addPlayer(){
+  const n=$("#j-nom").value.trim(); if(!n){ toast("Poné un apodo"); return; }
+  S.jugadores.push({id:uid(), nombre:n, activo:true});
+  render(); toast(n+" agregado"); $("#j-nom").focus();
+}
+function addBulk(){
+  const txt = $("#j-bulk").value.trim(); if(!txt){ toast("Pegá la lista primero"); return; }
+  let n=0;
+  txt.split("\n").map(l=>l.trim()).filter(Boolean).forEach(l=>{
+    const nom = l.split(",")[0].trim();
+    if(!nom) return;
+    S.jugadores.push({id:uid(), nombre:nom, activo:true});
+    n++;
+  });
+  render(); toast(n+" jugadores cargados");
+}
+function editPlayer(id){
+  const j = S.jugadores.find(x=>x.id===id);
+  openModal(`<h2>${esc(j.nombre)}</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+      <label class="f">Apodo<input id="e-nom" value="${esc(j.nombre)}"></label>
+      <label class="f">Estado<select id="e-act"><option value="1" ${j.activo!==false?"selected":""}>Activo</option><option value="0" ${j.activo===false?"selected":""}>Inactivo</option></select></label>
+    </div>
+    <div class="sticky-actions">
+      <button class="btn danger" onclick="delPlayer('${j.id}')">Eliminar</button>
+      <button class="btn ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick="savePlayer('${j.id}')">Guardar</button>
+    </div>`);
+}
+function savePlayer(id){
+  const j = S.jugadores.find(x=>x.id===id);
+  j.nombre=$("#e-nom").value.trim()||j.nombre; j.activo=$("#e-act").value==="1";
+  closeModal(); render(); toast("Guardado");
+}
+function delPlayer(id){
+  if(!confirm("¿Eliminar el jugador? Se borra de todos los partidos.")) return;
+  S.jugadores = S.jugadores.filter(x=>x.id!==id);
+  S.partidos.forEach(p=>{
+    p.asistentes=(p.asistentes||[]).filter(x=>x!==id);
+    delete p.eventos?.[id]; delete p.pagos?.[id]; if(p.mvp===id) p.mvp=null;
+  });
+  closeModal(); render(); toast("Jugador eliminado");
+}
+
+/* ---------- TESORERÍA ---------- */
+function vTesoreria(){
+  const f = fondo();
+  const ledger = [];
+  ordenados().forEach(p=>{
+    const m = matchFin(p);
+    if(m.cobrado) ledger.push({fecha:p.fecha, det:"Cuotas vs "+(p.rival||"Rival"), sub:m.cobrado/m.cuota+" jugadores × "+money(m.cuota), monto:m.cobrado});
+    if(m.cancha)  ledger.push({fecha:p.fecha, det:"Cancha vs "+(p.rival||"Rival"), sub:S.cfg.formato, monto:-m.cancha});
+  });
+  S.mov.forEach(m=>ledger.push({fecha:m.fecha, det:m.concepto, sub:m.cat||(m.tipo==="gasto"?"Gasto":"Ingreso"), monto:(m.tipo==="gasto"?-1:1)*(+m.monto||0), id:m.id}));
+  (S.abonos||[]).forEach(a=>ledger.push({fecha:a.fecha, det:"Adelanto de "+nombre(a.jid),
+      sub:a.nota||"pago por adelantado", monto:+a.monto||0, abono:a.id}));
+  const INS = f.insc;
+  if(INS.cobrado) ledger.push({fecha:S.torneo.inscFecha||"", det:"Inscripción cobrada a los jugadores", sub:INS.pagaron+" de "+INS.n+" × "+money(INS.cuota), monto:INS.cobrado});
+  if(INS.egreso)  ledger.push({fecha:S.torneo.inscFecha||"", det:"Inscripción "+S.torneo.nombre, sub:S.torneo.org, monto:-INS.egreso});
+  ledger.sort((a,b)=>(b.fecha||"").localeCompare(a.fecha||""));
+  let run = f.saldo;
+
+  let h = `<div class="tiles">
+    <div class="tile"><div class="k">Saldo en caja</div><div class="v ${f.saldo<0?'neg':''}">${money(f.saldo)}</div>
+      <div class="n">Plata efectivamente cobrada</div></div>
+    <div class="tile"><div class="k">Por cobrar</div><div class="v ${f.porCobrar>0?'neg':''}">${money(f.porCobrar)}</div>
+      <div class="n">${f.insc.porCobrar>0? "Cuotas + inscripción" : "Cuotas impagas"}</div></div>
+    <div class="tile"><div class="k">Saldo proyectado</div><div class="v">${money(f.proyectado)}</div>
+      <div class="n">Si cobran todo</div></div>
+  </div>
+
+  <div class="card"><h2>Cómo se compone</h2><div class="tblwrap"><table><tbody>
+    <tr><td>Cobrado a los jugadores${f.insc.cobrado?" (cuotas + inscripción)":" (cuotas)"}</td><td class="num pos">+${money(f.cobrado)}</td></tr>
+    <tr><td>Otros ingresos (sponsors, aportes)</td><td class="num pos">+${money(f.ingresos)}</td></tr>
+    <tr><td>Canchas pagadas</td><td class="num neg">−${money(f.cancha)}</td></tr>
+    <tr><td>Otros gastos${f.insc.egreso?" (incluye inscripción "+money(f.insc.egreso)+")":""}</td><td class="num neg">−${money(f.gastos)}</td></tr>
+    <tr><td style="font-weight:700">Saldo</td><td class="num ${f.saldo<0?'neg':'pos'}" style="font-weight:700">${money(f.saldo)}</td></tr>
+  </tbody></table></div>
+  <div class="hint" style="margin-top:10px">Regla del equipo: <b>${money(S.cfg.cuota)} por jugador por partido</b>, cancha <b>${money(S.cfg.cancha)}</b>.
+  Se cubre con <b>${Math.ceil(S.cfg.cancha/S.cfg.cuota)} jugadores</b>; lo que sobra queda acá.</div></div>`;
+
+  const I = f.insc;
+  h += `<div class="card"><h2>Inscripción del torneo</h2>
+    ${RO? `<div class="hint">Se pagó <b>${money(S.torneo.inscripcion||0)}</b> al torneo${S.torneo.inscFecha?" el "+fdate(S.torneo.inscFecha):""}.</div>` : `<div class="row">
+      <label class="f" style="min-width:130px">Se pagó al torneo<input type="number" min="0" step="0.01" id="i-monto" value="${S.torneo.inscripcion||""}" placeholder="0" onchange="setInsc()"></label>
+      <label class="f" style="min-width:130px">Se cobra por jugador<input type="number" min="0" step="0.01" id="i-cuota" value="${S.torneo.inscCuota||""}" placeholder="auto" onchange="setInsc()"></label>
+      <label class="f" style="min-width:140px">Fecha de pago<input type="date" id="i-fecha" value="${S.torneo.inscFecha||""}" onchange="setInsc()"></label>
+      <label class="f" style="min-width:150px">¿Ya se pagó al torneo?<select id="i-pagada" onchange="setInsc()">
+        <option value="1" ${S.torneo.inscPagada!==false?"selected":""}>Sí, ya salió del fondo</option>
+        <option value="0" ${S.torneo.inscPagada===false?"selected":""}>Todavía no</option></select></label>
+    </div>`}
+    ${I.total>0? `<div class="hint" style="margin-top:10px">
+      <b>${money(I.cuota)}</b> × ${I.n} jugadores = <b>${money(I.recaudaTodo)}</b> contra un costo de <b>${money(I.total)}</b>
+      → ${I.recaudaTodo>=I.total? `sobran <b class="pos">${money(I.recaudaTodo-I.total)}</b> para el fondo` : `faltan <b class="neg">${money(I.total-I.recaudaTodo)}</b>`}.<br>
+      <b class="pos">${I.pagaron} pagaron</b> · <b class="${I.n-I.pagaron>0?'neg':''}">${I.n-I.pagaron} deben</b> ${money(I.porCobrar)}${I.exentos?` · ${I.exentos} no la pagan`:""}.</div>
+      <div class="pgrid">${activos().map(j=>{
+        const ex=exentoInsc(j.id), pg=pagoInsc(j.id);
+        return `<div class="prow ${ex?"ex":pg?"ok":""}">
+          <label><input type="checkbox" ${pg&&!ex?"checked":""} ${(ex||RO)?"disabled":""} onchange="tgInsc('${j.id}')">
+            <span class="nm">${esc(j.nombre)}</span></label>
+          <span class="am">${ex? "no paga" : pg? "pagó" : money(I.cuota)}</span>
+          ${RO?"":`<button class="mini" onclick="tgExento('${j.id}')" title="${ex?"Volver a cobrarle":"Marcar que no va a pagar la inscripción"}">${ex?"incluir":"no paga"}</button>`}
+        </div>`;}).join("")}</div>`
+      : `<div class="hint" style="margin-top:10px">Cuando tengas el monto de la inscripción, ponelo acá y aparece la lista con un tilde por jugador.</div>`}
+  </div>`;
+
+  const conFavor = S.jugadores.map(j=>({j,s:statsJugador(j)})).filter(x=>x.s.aFavor>0);
+  h += RO? (conFavor.length? `<div class="card"><h2>Pagos por adelantado</h2><div class="row">${
+      conFavor.map(x=>`<span class="pill g">${esc(x.j.nombre)} · ${money(x.s.aFavor)} a favor</span>`).join("")}</div>
+      <div class="hint" style="margin-top:8px">Ese saldo se descuenta solo en las próximas fechas.</div></div>`:"")
+    : `<div class="card"><h2>Cargar un adelanto</h2>
+    <div class="row">
+      <label class="f" style="min-width:150px">Jugador<select id="ab-j">${activos().map(j=>`<option value="${j.id}">${esc(j.nombre)}</option>`).join("")}</select></label>
+      <label class="f" style="min-width:130px">Fecha<input type="date" id="ab-f" value="${hoy()}"></label>
+      <label class="f" style="min-width:110px">Monto<input type="number" id="ab-m" min="0" step="0.01" placeholder="${S.cfg.cuota}"></label>
+      <label class="f" style="flex:1;min-width:140px">Nota<input id="ab-n" placeholder="adelantó una fecha"></label>
+      <button class="btn" onclick="addAbono()" style="align-self:flex-end">Cargar</button>
+    </div>
+    <div class="hint" style="margin-top:8px">Plata que alguien deja adelantada. Se va descontando sola de las próximas cuotas, sin que tengas que marcar nada.</div>
+    ${(S.abonos||[]).length? `<div class="tblwrap" style="margin-top:12px"><table>
+      <thead><tr><th>Fecha</th><th>Jugador</th><th>Nota</th><th class="num">Monto</th><th class="num">A favor hoy</th><th></th></tr></thead><tbody>`+
+      [...S.abonos].sort((a,b)=>(b.fecha||"").localeCompare(a.fecha||"")).map(a=>`<tr>
+        <td class="hint">${fdate(a.fecha)}</td><td class="name">${esc(nombre(a.jid))}</td>
+        <td class="hint">${esc(a.nota||"")}</td>
+        <td class="num pos" style="font-weight:650">${money(a.monto)}</td>
+        <td class="num hint">${money(credito(a.jid).aFavor)}</td>
+        <td class="num"><button class="btn danger sm" onclick="delAbono('${a.id}')">✕</button></td></tr>`).join("")+
+      `</tbody></table></div>` : ""}
+    </div>` ;
+
+  h += `<div class="card"><h2>Estado de cuenta por jugador</h2><div class="tblwrap"><table>
+    <thead><tr><th>Apodo</th><th class="num">Fechas</th><th class="num">Pagado</th><th class="num">Cuotas</th><th class="num">Inscripción</th><th class="num">Debe</th><th></th></tr></thead><tbody>` +
+    (S.jugadores.length? S.jugadores.map(j=>{const s=statsJugador(j); return `<tr>
+      <td class="name">${esc(j.nombre)}</td><td class="num">${s.pj}</td>
+      <td class="num pos">${money(s.pagadoTotal)}</td>
+      <td class="num ${s.debe>0?'neg':'hint'}">${s.debe>0?money(s.debe):"—"}</td>
+      <td class="num ${s.debeInsc>0?'neg':'hint'}">${s.exentoInsc? "no paga" : s.debeInsc>0? money(s.debeInsc) : "—"}</td>
+      <td class="num ${s.debeTotal>0?'neg':''}" style="font-weight:650">${s.debeTotal>0?money(s.debeTotal):"—"}</td>
+      <td class="num">${s.debeTotal>0? (RO?`<span class="pill p">debe</span>`:`<button class="btn ghost sm" onclick="saldar('${j.id}')">Saldar</button>`)
+        : s.aFavor>0? `<span class="pill g">+${money(s.aFavor)} a favor</span>` : `<span class="pill g">al día</span>`}</td>
+    </tr>`;}).join("") : `<tr><td colspan="7"><div class="empty">Sin jugadores.</div></td></tr>`) +
+    `</tbody></table></div></div>`;
+
+  h += `<div class="card"><h2>Movimientos</h2><div class="tblwrap"><table>
+    <thead><tr><th>Fecha</th><th>Detalle</th><th class="num">Monto</th><th class="num">Saldo</th></tr></thead><tbody>` +
+    (ledger.length? ledger.map(l=>{ const saldoDesp = run; run -= l.monto; return `<tr>
+      <td class="hint">${fdate(l.fecha)}</td>
+      <td><div class="name">${esc(l.det)}</div><div class="hint">${esc(l.sub||"")}</div></td>
+      <td class="num ${l.monto<0?'neg':'pos'}" style="font-weight:650">${l.monto>0?"+":""}${money(l.monto)}</td>
+      <td class="num hint">${money(saldoDesp)}</td></tr>`;}).join("") :
+      `<tr><td colspan="4"><div class="empty">Sin movimientos todavía.</div></td></tr>`) +
+    `</tbody></table></div></div>`;
+  $("#tab-tesoreria").innerHTML = h;
+}
+function saldar(id){
+  S.partidos.forEach(p=>{ if((p.asistentes||[]).includes(id)){ p.pagos=p.pagos||{}; p.pagos[id]=true; } });
+  if(!exentoInsc(id)){ S.torneo.inscPagos = S.torneo.inscPagos||{}; S.torneo.inscPagos[id]=true; }
+  render(); toast(nombre(id)+" quedó al día");
+}
+function addAbono(){
+  const jid=$("#ab-j").value, m=+$("#ab-m").value||0;
+  if(!jid || !m){ toast("Elegí jugador y monto"); return; }
+  S.abonos = S.abonos||[];
+  S.abonos.push({id:uid(), jid, fecha:$("#ab-f").value||hoy(), monto:m, nota:$("#ab-n").value.trim()});
+  render(); toast("Adelanto de "+nombre(jid)+" cargado");
+}
+function delAbono(id){ S.abonos=(S.abonos||[]).filter(a=>a.id!==id); render(); }
+function setInsc(){
+  S.torneo.inscripcion = +$("#i-monto").value||0;
+  S.torneo.inscCuota = +$("#i-cuota").value||0;
+  S.torneo.inscFecha = $("#i-fecha").value;
+  S.torneo.inscPagada = $("#i-pagada").value==="1";
+  render(); toast("Inscripción actualizada");
+}
+function tgInsc(id){
+  S.torneo.inscPagos = S.torneo.inscPagos||{};
+  S.torneo.inscPagos[id] = !S.torneo.inscPagos[id];
+  render();
+}
+function tgExento(id){
+  S.torneo.inscExentos = S.torneo.inscExentos||{};
+  if(S.torneo.inscExentos[id]) delete S.torneo.inscExentos[id];
+  else { S.torneo.inscExentos[id]=true; delete (S.torneo.inscPagos||{})[id]; }
+  render();
+  toast(exentoInsc(id)? nombre(id)+" no paga la inscripción" : "Se le vuelve a cobrar a "+nombre(id));
+}
+
+/* ---------- GASTOS ---------- */
+const CATS = ["Cancha extra","Pelotas","Camisetas","Árbitro","Inscripción","Tercer tiempo","Botiquín","Otros"];
+function vGastos(){
+  const movs = [...S.mov].sort((a,b)=>(b.fecha||"").localeCompare(a.fecha||""));
+  const tg = S.mov.filter(m=>m.tipo==="gasto").reduce((s,m)=>s+(+m.monto||0),0);
+  const ti = S.mov.filter(m=>m.tipo!=="gasto").reduce((s,m)=>s+(+m.monto||0),0);
+  const porCat = {};
+  S.mov.filter(m=>m.tipo==="gasto").forEach(m=>{ porCat[m.cat||"Otros"]=(porCat[m.cat||"Otros"]||0)+(+m.monto||0); });
+  const cats = Object.entries(porCat).sort((a,b)=>b[1]-a[1]);
+  const maxC = cats.length? cats[0][1] : 1;
+
+  let h = RO? "" : `<div class="card"><h2>Cargar movimiento</h2>
+    <div class="row">
+      <label class="f" style="min-width:120px">Tipo<select id="g-tipo"><option value="gasto">Gasto</option><option value="ingreso">Ingreso</option></select></label>
+      <label class="f" style="min-width:130px">Fecha<input type="date" id="g-fecha" value="${hoy()}"></label>
+      <label class="f" style="flex:2;min-width:150px">Concepto<input id="g-con" placeholder="Pelota nueva"></label>
+      <label class="f" style="min-width:140px">Categoría<select id="g-cat">${CATS.map(c=>`<option>${c}</option>`).join("")}</select></label>
+      <label class="f" style="min-width:100px">Monto<input type="number" id="g-monto" min="0" step="0.01" placeholder="0"></label>
+      <button class="btn" onclick="addMov()" style="align-self:flex-end">Cargar</button>
+    </div>
+    <div class="hint" style="margin-top:8px">Los gastos salen del fondo común. La cancha de cada partido se carga sola desde Partidos, no la pongas acá.</div>
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><div class="k">Gastos extra</div><div class="v neg">${money(tg)}</div><div class="n">Fuera de la cancha</div></div>
+    <div class="tile"><div class="k">Ingresos extra</div><div class="v pos">${money(ti)}</div><div class="n">Sponsors, aportes</div></div>
+  </div>`;
+
+  if(cats.length){
+    h += `<div class="card"><h2>Gastos por categoría</h2><div class="bars">` +
+      cats.map(([c,v])=>`<div class="bar"><div class="lb">${esc(c)}</div>
+        <div class="tr"><div class="fl" style="width:${Math.max(3,v/maxC*100)}%;background:var(--s2)"></div></div>
+        <div class="vv">${money(v)}</div></div>`).join("") + `</div></div>`;
+  }
+
+  h += `<div class="card"><h2>Historial</h2><div class="tblwrap"><table>
+    <thead><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th class="num">Monto</th><th></th></tr></thead><tbody>` +
+    (movs.length? movs.map(m=>`<tr>
+      <td class="hint">${fdate(m.fecha)}</td><td class="name">${esc(m.concepto)}</td>
+      <td class="hint">${esc(m.cat||"")}</td>
+      <td class="num ${m.tipo==="gasto"?'neg':'pos'}" style="font-weight:650">${m.tipo==="gasto"?"−":"+"}${money(+m.monto||0)}</td>
+      ${RO?"":`<td class="num"><button class="btn danger sm" onclick="delMov('${m.id}')">✕</button></td>`}</tr>`).join("")
+      : `<tr><td colspan="5"><div class="empty">Sin movimientos.</div></td></tr>`) +
+    `</tbody></table></div></div>`;
+  $("#tab-gastos").innerHTML = h;
+}
+function addMov(){
+  const c=$("#g-con").value.trim(), m=+$("#g-monto").value||0;
+  if(!c || !m){ toast("Falta concepto o monto"); return; }
+  S.mov.push({id:uid(), tipo:$("#g-tipo").value, fecha:$("#g-fecha").value||hoy(), concepto:c, cat:$("#g-cat").value, monto:m});
+  render(); toast("Cargado");
+}
+function delMov(id){ S.mov = S.mov.filter(m=>m.id!==id); render(); }
+
+/* =========================================================
+   POSTS INSTAGRAM
+   ========================================================= */
+let postType = "resultado", postFmt = "feed", plantelEstilo = "bandera";
+const ESTILOS = [["bandera","Bandera"],["dorsales","Dorsales"],["editorial","Editorial"]];
+const POSTS = [
+  ["convocados","Convocados"],
+  ["plantel","Presentación del plantel"],
+  ["resultado","Resultado"],["mvp","Figura del partido"],["goleador","Goleador de la fecha"],
+  ["tabla","Tabla de goleadores"],["convocatoria","Convocatoria"],["posiciones","Tabla del torneo"],
+  ["balance","Estado del fondo"]
+];
+function vPosts(){
+  const ult = ultimoPartido();
+  let h = `<div class="postgrid">
+    <div>
+      <div class="card"><h2>Tipo de placa</h2>
+        <div class="chips">${POSTS.map(([k,l])=>`<button class="chip ${postType===k?"on":""}" onclick="setPost('${k}')">${l}</button>`).join("")}</div>
+      </div>
+      <div class="card"><h2>Formato</h2>
+        <div class="chips">
+          <button class="chip ${postFmt==="feed"?"on":""}" onclick="setFmt('feed')">Feed 1:1</button>
+          <button class="chip ${postFmt==="story"?"on":""}" onclick="setFmt('story')">Story 9:16</button>
+        </div>
+      </div>
+      ${postType==="plantel"? `<div class="card"><h2>Diseño</h2>
+        <div class="chips">${ESTILOS.map(([k,l])=>`<button class="chip ${plantelEstilo===k?"on":""}" onclick="setEstilo('${k}')">${l}</button>`).join("")}</div>
+      </div>` : ""}
+      ${postType==="convocados"? `<div class="card"><h2>Quiénes van (${convocados().length})</h2>
+        <div class="hint">Tildá a los que confirmaron. Con ${Math.ceil(S.cfg.cancha/S.cfg.cuota)} se cubre la cancha.</div>
+        <div class="pgrid">${activos().map(j=>{
+          const on=(S.proximo.convocados||[]).includes(j.id);
+          return `<div class="prow ${on?"ok":""}">
+            <label><input type="checkbox" ${on?"checked":""} onchange="tgConv('${j.id}')">
+              <span class="nm">${esc(j.nombre)}</span></label>
+            <span class="am">${on? money(S.cfg.cuota) : "—"}</span><span></span>
+          </div>`;}).join("")}</div>
+        <div class="hint" style="margin-top:10px">${convocados().length? "Juntan <b>"+money(convocados().length*S.cfg.cuota)+"</b> contra <b>"+money(S.cfg.cancha)+"</b> de cancha → "+(convocados().length*S.cfg.cuota>=S.cfg.cancha? "sobran <b class='pos'>"+money(convocados().length*S.cfg.cuota-S.cfg.cancha)+"</b>" : "faltan <b class='neg'>"+money(S.cfg.cancha-convocados().length*S.cfg.cuota)+"</b>") : "Todavía no marcaste a nadie."}</div>
+      </div>` : ""}
+      ${(postType==="convocatoria"||postType==="convocados")? `<div class="card"><h2>Próximo partido</h2>
+        ${proximoFixture()? `<div class="hint" style="margin-bottom:10px">Según el fixture toca la
+          <b>Fecha ${proximoFixture().f}</b> ${esLocal(proximoFixture())?"de local":"de visitante"} contra
+          <b>${esc(rivalDe(proximoFixture()))}</b>. <button class="btn ghost sm" onclick="usarFixture()">Usar</button></div>`:""}
+        <div class="grid">
+          <label class="f">Rival<input id="p-rival" value="${esc(S.proximo.rival)}" oninput="setProx()"></label>
+          <label class="f">Fecha<input type="date" id="p-fecha" value="${S.proximo.fecha||""}" oninput="setProx()"></label>
+          <label class="f">Hora<input id="p-hora" value="${esc(S.proximo.hora)}" oninput="setProx()"></label>
+          <label class="f">Cancha<input id="p-lugar" value="${esc(S.proximo.lugar)}" oninput="setProx()" placeholder="Complejo Norte"></label>
+        </div></div>` : ""}
+      <div class="card"><h2>Texto para el post</h2>
+        <textarea class="capbox" id="caption"></textarea>
+        <div class="row" style="margin-top:10px"><button class="btn ghost sm" onclick="copyCap()">Copiar texto</button></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <canvas id="preview" width="1080" height="1080"></canvas>
+        <div class="row" style="margin-top:12px">
+          <button class="btn" onclick="dlPost()">Descargar PNG</button>
+          <button class="btn ghost" onclick="drawPost()">Actualizar</button>
+        </div>
+        <div class="hint" style="margin-top:8px">${ult? "Usa los datos del último partido cargado (vs "+esc(ult.rival||"Rival")+")." : "Cargá un partido para que la placa se llene con datos reales."}</div>
+      </div>
+    </div>
+  </div>`;
+  $("#tab-posts").innerHTML = h;
+  drawPost();
+}
+function setPost(k){ postType=k; if(k==="plantel"||k==="convocados") postFmt="story"; render(); }
+function tgConv(id){
+  S.proximo.convocados = S.proximo.convocados || [];
+  const i = S.proximo.convocados.indexOf(id);
+  if(i>=0) S.proximo.convocados.splice(i,1); else S.proximo.convocados.push(id);
+  save(); render();
+}
+function convocados(){
+  const ids = S.proximo.convocados || [];
+  return activos().filter(j=>ids.includes(j.id));
+}
+function setFmt(k){ postFmt=k; render(); }
+function setEstilo(k){ plantelEstilo=k; render(); }
+function usarFixture(){
+  const m = proximoFixture(); if(!m) return;
+  S.proximo.rival = rivalDe(m); save(); render(); toast("Rival tomado del fixture");
+}
+function setProx(){
+  S.proximo = { rival:$("#p-rival").value, fecha:$("#p-fecha").value, hora:$("#p-hora").value, lugar:$("#p-lugar").value };
+  save(); drawPost();
+}
+function copyCap(){
+  const t=$("#caption"); t.select();
+  navigator.clipboard?.writeText(t.value).then(()=>toast("Texto copiado"),()=>toast("Copiá con Ctrl+C"));
+}
+function dlPost(){
+  const c=$("#preview"); const a=document.createElement("a");
+  a.download = (S.club.replace(/\s+/g,"-").toLowerCase())+"-"+postType+"-"+postFmt+".png";
+  a.href = c.toDataURL("image/png"); a.click(); toast("Placa descargada");
+}
+
+/* ---- escudo para el canvas ---- */
+let LOGO=null;
+function cargarLogo(){
+  const src = S.marca?.logo || LOGO_SRC;
+  if(!src){ LOGO=null; return; }
+  if(LOGO && LOGO._src===src) return;
+  LOGO = new Image(); LOGO._src=src;
+  LOGO.onload = ()=>{ if(tab==="posts") drawPost(); };
+  LOGO.src = src;
+}
+function subirLogo(inp){
+  const f=inp.files[0]; if(!f) return;
+  if(f.size > 2_000_000){ toast("La imagen es muy pesada (máx 2 MB)"); return; }
+  const r=new FileReader();
+  r.onload=()=>{ S.marca.logo=r.result; LOGO=null; cargarLogo(); save(); render(); toast("Escudo actualizado"); };
+  r.readAsDataURL(f);
+}
+function resetLogo(){ S.marca.logo=null; LOGO=null; cargarLogo(); render(); toast("Escudo original restaurado"); }
+
+/* ---- helpers de canvas ---- */
+function rr(x,y,w,h,r){
+  const c=CTX; c.beginPath();
+  c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r);
+  c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath();
+}
+function txt(s,x,y,{size=48,weight=600,color="#fff",align="left",track=0,max=0}={}){
+  const c=CTX;
+  c.font = weight+" "+size+'px system-ui,-apple-system,"Segoe UI",sans-serif';
+  if(max){ let sz=size; while(c.measureText(s).width>max && sz>14){ sz-=2; c.font = weight+" "+sz+'px system-ui,-apple-system,"Segoe UI",sans-serif'; } }
+  c.fillStyle=color; c.textAlign=align; c.textBaseline="alphabetic";
+  if(track){
+    const chars=[...String(s)]; const w=chars.reduce((s2,ch)=>s2+c.measureText(ch).width,0)+track*(chars.length-1);
+    let cx = align==="center"? x-w/2 : align==="right"? x-w : x;
+    c.textAlign="left"; chars.forEach(ch=>{ c.fillText(ch,cx,y); cx+=c.measureText(ch).width+track; });
+  } else c.fillText(String(s),x,y);
+}
+/* =========================================================
+   PLACAS DEL PLANTEL — tres direcciones de arte
+   ========================================================= */
+function bandasBandera(W,H,x0,x1,alpha){       // franjas celeste/blanco/celeste del escudo
+  const c=CTX, bw=(x1-x0)/3;
+  c.save(); c.globalAlpha=alpha;
+  c.fillStyle="#6bace4"; c.fillRect(x0,0,bw,H); c.fillRect(x0+bw*2,0,bw,H);
+  c.fillStyle="#ffffff"; c.fillRect(x0+bw,0,bw,H);
+  c.restore();
+}
+function rayosSol(cx,cy,r,alpha){              // rayos del sol del escudo
+  const c=CTX; c.save(); c.globalAlpha=alpha; c.fillStyle="#eeb425";
+  for(let i=0;i<24;i++){
+    const a=i*Math.PI/12;
+    c.beginPath(); c.moveTo(cx,cy);
+    c.lineTo(cx+Math.cos(a-0.028)*r, cy+Math.sin(a-0.028)*r);
+    c.lineTo(cx+Math.cos(a+0.028)*r, cy+Math.sin(a+0.028)*r);
+    c.closePath(); c.fill();
+  }
+  c.restore();
+}
+function logoAt(x,y,h){
+  if(!(LOGO && LOGO.complete && LOGO.naturalWidth)) return 0;
+  const w=h*(LOGO.naturalWidth/LOGO.naturalHeight);
+  CTX.drawImage(LOGO, x-w/2, y, w, h); return w;
+}
+
+/* ---- A · Bandera: escudo grande, franjas y lista numerada ---- */
+function plantelBandera(js,W,H,P,A,GOLD,INK,DIM){
+  const c=CTX, story=postFmt==="story";
+  bandasBandera(W,H,W*0.16,W*0.84,0.055);
+  const lh = story? 260 : 132;
+  const yLogo = story? 300 : 160;
+  rayosSol(W/2, yLogo+lh*0.5, W*0.66, 0.05);
+  logoAt(W/2, yLogo, lh);
+
+  const yT = yLogo + lh + (story?96:62);
+  txt("EL PLANTEL", W/2, yT, {size:story?78:50, weight:800, color:INK, align:"center", track:10, max:W-P*2});
+  c.fillStyle=GOLD; c.fillRect(W/2-70, yT+26, 140, 4);
+  txt(S.torneo.nombre.toUpperCase()+"  ·  "+S.torneo.org.toUpperCase(), W/2, yT+72,
+      {size:story?24:18, weight:700, color:A, align:"center", track:5, max:W-P*2});
+
+  const cols = js.length>9? 2 : 1;
+  const rows = Math.ceil(js.length/cols);
+  const gap  = 22;
+  const cw   = (W-P*2-gap*(cols-1))/cols;
+  const y0   = yT + (story?140:104);
+  const rh   = Math.min(story?98:60, ((H-(story?150:88))-y0)/rows);
+  const fs   = Math.max(17, Math.min(cols===1?52:40, rh*0.46));
+  js.forEach((j,i)=>{
+    const col = cols===1?0:i%cols, fil = cols===1?i:Math.floor(i/cols);
+    const x = P+col*(cw+gap), y = y0+fil*rh;
+    c.fillStyle="rgba(255,255,255,.055)"; rr(x,y,cw,rh-10,12); c.fill();
+    txt(String(i+1).padStart(2,"0"), x+30, y+(rh-10)/2+fs*0.34, {size:fs*0.72, weight:800, color:A, align:"center"});
+    c.fillStyle="rgba(255,255,255,.14)"; c.fillRect(x+56, y+12, 2, rh-34);
+    const g = statsJugador(j).g;
+    txt(j.nombre, x+74, y+(rh-10)/2+fs*0.34, {size:fs, weight:700, color:INK, max:cw-(g>0?150:96)});
+    if(g>0) txt("⚽"+g, x+cw-22, y+(rh-10)/2+fs*0.3, {size:fs*0.6, weight:750, color:GOLD, align:"right"});
+  });
+}
+
+/* ---- B · Dorsales: número gigante detrás de cada nombre ---- */
+function plantelDorsales(js,W,H,P,A,GOLD,INK,DIM){
+  const c=CTX, story=postFmt==="story";
+  const yT = story? 430 : 252;
+  c.save(); c.globalAlpha=.13; c.fillStyle=A;                 // banda diagonal
+  c.beginPath(); c.moveTo(0,story?150:96); c.lineTo(W,story?96:70);
+  c.lineTo(W, yT+(story?54:38)); c.lineTo(0, yT+(story?96:64)); c.closePath(); c.fill();
+  c.restore();
+
+  txt("PLANTEL", P, yT, {size:story?108:66, weight:800, color:INK, track:1, max:W-P*2});
+  txt(S.torneo.nombre.toUpperCase()+"  ·  "+js.length+" JUGADORES", P, yT+(story?56:40),
+      {size:story?25:18, weight:700, color:A, track:5, max:W-P*2});
+  c.fillStyle=GOLD; c.fillRect(P, yT+(story?82:58), 96, 5);
+
+  const y0  = yT + (story?150:100);
+  const rh  = Math.min(story?92:56, ((H-(story?150:92))-y0)/js.length);
+  const gut = story? 150 : 96;
+  const fs  = Math.max(16, Math.min(story?48:32, rh*0.55));
+  js.forEach((j,i)=>{
+    const y = y0 + i*rh, mid = y + rh/2;
+    txt(String(i+1).padStart(2,"0"), P+gut-22, mid+rh*0.33, {size:rh*0.92, weight:800, color:"rgba(107,172,228,.26)", align:"right"});
+    txt(j.nombre.toUpperCase(), P+gut+14, mid+fs*0.34, {size:fs, weight:750, color:INK, track:1, max:W-P*2-gut-130});
+    const g = statsJugador(j).g;
+    if(g>0) txt("⚽ "+g, W-P, mid+fs*0.3, {size:fs*0.62, weight:750, color:GOLD, align:"right"});
+    c.fillStyle="rgba(255,255,255,.07)"; c.fillRect(P, y+rh-1, W-P*2, 1);
+  });
+}
+
+/* ---- C · Editorial: tipografía apilada, alternando blanco y celeste ---- */
+function plantelEditorial(js,W,H,P,A,GOLD,INK,DIM){
+  const c=CTX, story=postFmt==="story";
+  PIE = false;                                   // esta lleva barra propia abajo
+  const top = story? 410 : 250;
+  c.save(); c.translate(46, story? 1240 : 740); c.rotate(-Math.PI/2);
+  txt("PLANTEL "+S.torneo.nombre.toUpperCase(), 0, 0, {size:story?24:17, weight:750, color:A, track:8});
+  c.restore();
+
+  txt("TEMPORADA", P+30, top, {size:story?66:42, weight:800, color:DIM, track:4, max:W-P*2-60});
+  txt("2026", P+30, top+(story?70:44), {size:story?66:42, weight:800, color:DIM, track:4});
+  c.fillStyle=GOLD; c.fillRect(P+30, top+(story?98:62), 110, 5);
+
+  const barra = story?116:78;
+  const y0 = top + (story?160:100);
+  const bottom = H - barra - (story?36:22);
+  const rh = Math.min(story?92:52, (bottom-y0)/js.length);
+  const fs = Math.max(16, rh*0.85);
+  js.forEach((j,i)=>{
+    txt(j.nombre.toUpperCase(), P+30, y0 + i*rh + rh*0.78,
+        {size:fs, weight:800, color:i%2? A : INK, max:W-P*2-90});
+  });
+  c.fillStyle=A; c.fillRect(0, H-barra, W, barra);
+  txt(S.club.toUpperCase()+"  ·  "+js.length+" JUGADORES", W/2, H-barra/2+(story?10:8),
+      {size:story?28:20, weight:800, color:"#08131d", align:"center", track:5, max:W-80});
+}
+
+let CTX=null, PIE=true;
+function drawPost(){
+  const cv=$("#preview"); if(!cv) return;
+  const W=1080, H = postFmt==="story"? 1920 : 1080;
+  cv.width=W; cv.height=H; CTX = cv.getContext("2d"); const c=CTX;
+  const A = "#6bace4", GOLD="#eeb425", INK="#ffffff", DIM="#9fb3c6";
+  PIE = true;
+
+  // fondo negro, como el escudo
+  const g=c.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,"#0d1218"); g.addColorStop(.5,"#040507"); g.addColorStop(1,"#0b1017");
+  c.fillStyle=g; c.fillRect(0,0,W,H);
+  // rayas diagonales celestes
+  c.save(); c.globalAlpha=.055; c.strokeStyle=A; c.lineWidth=40;
+  for(let i=-H;i<W+H;i+=110){ c.beginPath(); c.moveTo(i,0); c.lineTo(i+H,H); c.stroke(); }
+  c.restore();
+  // glow celeste
+  const rg=c.createRadialGradient(W*0.5,H*0.36,0,W*0.5,H*0.36,W*0.8);
+  rg.addColorStop(0,"rgba(107,172,228,.20)"); rg.addColorStop(1,"rgba(0,0,0,0)");
+  c.fillStyle=rg; c.fillRect(0,0,W,H);
+  // escudo de marca de agua
+  if(LOGO && LOGO.complete && LOGO.naturalWidth){
+    c.save(); c.globalAlpha=.07;
+    const s = W*0.34, ar = LOGO.naturalHeight/LOGO.naturalWidth;
+    c.drawImage(LOGO, W-80-s, H-40-s*ar, s, s*ar);
+    c.restore();
+  }
+
+  const P=80, top = postFmt==="story"? 230 : 110;
+  // header club
+  if(LOGO && LOGO.complete && LOGO.naturalWidth){
+    const hh=76, ww=hh*(LOGO.naturalWidth/LOGO.naturalHeight);
+    c.drawImage(LOGO, P, top-80, ww, hh);
+    txt(S.club.toUpperCase(), P+ww+18, top-26, {size:34, weight:750, color:INK, track:2, max:W-P*2-ww-40});
+  } else {
+    c.fillStyle=A; rr(P,top-70,64,64,18); c.fill();
+    txt(S.emoji||"⚽", P+32, top-24, {size:36, align:"center"});
+    txt(S.club.toUpperCase(), P+84, top-26, {size:34, weight:750, color:INK, track:2, max:W-P*2-100});
+  }
+  c.fillStyle="rgba(107,172,228,.30)"; c.fillRect(P, top+6, W-P*2, 2);
+
+  const mid = postFmt==="story"? 720 : 300;
+  let cap="";
+  const ult = ultimoPartido();
+
+  if(postType==="resultado"){
+    if(!ult){ txt("Cargá un partido primero", W/2, mid+40, {size:44, align:"center", color:DIM}); }
+    else{
+      const win = ult.gf>ult.gc, draw = ult.gf===ult.gc;
+      const lbl = win? "VICTORIA" : draw? "EMPATE" : "DERROTA";
+      const col = win? "#0ca30c" : draw? "#eeb425" : "#e66767";
+      txt(lbl, W/2, mid, {size:44, weight:750, color:col, align:"center", track:8});
+      txt(fdateLong(ult.fecha)+"  ·  "+(ult.torneo||"Amistoso").toUpperCase(), W/2, mid+52, {size:26, color:DIM, align:"center", track:2});
+      // marcador
+      const yS = mid+230;
+      txt((+ult.gf||0)+" - "+(+ult.gc||0), W/2, yS, {size:210, weight:800, color:INK, align:"center"});
+      txt(S.club.toUpperCase()+"  vs  "+(ult.rival||"RIVAL").toUpperCase(), W/2, yS+70, {size:32, weight:600, color:DIM, align:"center", track:2, max:W-P*2});
+      // goleadores
+      const sc=(ult.asistentes||[]).map(id=>({id,g:ev(ult,id).g})).filter(x=>x.g>0).sort((a,b)=>b.g-a.g);
+      let y = yS+165;
+      const maxSc = postFmt==="story"? 8 : 3;
+      if(sc.length){
+        txt("GOLES", P, y, {size:24, weight:700, color:A, track:4});
+        if(sc.length>maxSc) txt("+"+(sc.length-maxSc)+" más", W-P, y, {size:24, color:DIM, align:"right"});
+        y+=52;
+        sc.slice(0,maxSc).forEach(s=>{
+          txt("⚽ "+nombreFull(s.id)+(s.g>1?"  ×"+s.g:""), P, y, {size:38, weight:600, color:INK, max:W-P*2});
+          y+=54;
+        });
+      }
+      if(ult.mvp){
+        y+=12; txt("FIGURA", P, y, {size:24, weight:700, color:A, track:4});
+        txt("★ "+nombreFull(ult.mvp), P, y+50, {size:38, weight:600, color:INK, max:W-P*2});
+      }
+      cap = `${win?"🟢 ¡GANAMOS!":draw?"🟡 Empate":"🔴 Caímos"} ${ult.gf}-${ult.gc} vs ${ult.rival||"Rival"} · ${fdate(ult.fecha)}\n`+
+        (sc.length? `⚽ ${sc.map(s=>nombreFull(s.id)+(s.g>1?" x"+s.g:"")).join(", ")}\n`:"")+
+        (ult.mvp? `★ Figura: ${nombreFull(ult.mvp)}\n`:"")+
+        `\n#${S.club.replace(/\s+/g,"")} #superliga8v8 #ps23soccer #futbol8`;
+    }
+  }
+
+  if(postType==="mvp"){
+    const id = ult?.mvp;
+    txt("FIGURA DEL PARTIDO", W/2, mid, {size:36, weight:750, color:A, align:"center", track:6});
+    if(!id){ txt("Elegí un MVP en el partido", W/2, mid+90, {size:40, align:"center", color:DIM}); }
+    else{
+      txt("★", W/2, mid+180, {size:150, color:"#eeb425", align:"center"});
+      txt(nombreFull(id).toUpperCase(), W/2, mid+300, {size:84, weight:800, color:INK, align:"center", max:W-P*2});
+      const e = ev(ult,id);
+      const bits=[]; if(e.g)bits.push(e.g+(e.g>1?" goles":" gol")); if(e.a)bits.push(e.a+(e.a>1?" asistencias":" asistencia"));
+      txt(bits.join("  ·  ")||"Partidazo", W/2, mid+360, {size:34, color:DIM, align:"center"});
+      txt("vs "+(ult.rival||"Rival")+"  ·  "+fdate(ult.fecha), W/2, mid+420, {size:28, color:DIM, align:"center"});
+      cap = `★ FIGURA DEL PARTIDO: ${nombreFull(id)}\n${bits.join(" · ")}\nvs ${ult.rival||"Rival"} · ${fdate(ult.fecha)}\n\n#${S.club.replace(/\s+/g,"")} #figuradelpartido #superliga8v8`;
+    }
+  }
+
+  if(postType==="goleador"){
+    const t = tablaGoleadores();
+    txt("GOLEADOR DE LA TEMPORADA", W/2, mid, {size:32, weight:750, color:A, align:"center", track:4});
+    if(!t.length){ txt("Todavía sin goles cargados", W/2, mid+90, {size:40, align:"center", color:DIM}); }
+    else{
+      const top=t[0];
+      txt("⚽", W/2, mid+180, {size:130, align:"center"});
+      txt(top.j.nombre.toUpperCase(), W/2, mid+300, {size:84, weight:800, color:INK, align:"center", max:W-P*2});
+      txt(top.s.g+(top.s.g===1?" GOL":" GOLES"), W/2, mid+370, {size:44, weight:700, color:"#eeb425", align:"center", track:3});
+      txt("en "+top.s.pj+" partidos  ·  "+top.s.gpp.toFixed(2)+" por partido", W/2, mid+425, {size:28, color:DIM, align:"center"});
+      cap = `⚽ Goleador de la temporada: ${top.j.nombre} — ${top.s.g} goles en ${top.s.pj} partidos.\n\n#${S.club.replace(/\s+/g,"")} #goleador #superliga8v8`;
+    }
+  }
+
+  if(postType==="tabla"){
+    const t = tablaGoleadores().slice(0, postFmt==="story"?9:7);
+    txt("TABLA DE GOLEADORES", W/2, mid-40, {size:36, weight:750, color:A, align:"center", track:5});
+    if(!t.length){ txt("Sin goles cargados", W/2, mid+90, {size:40, align:"center", color:DIM}); }
+    else{
+      let y = mid+70;
+      t.forEach((x,i)=>{
+        c.fillStyle = i%2? "rgba(255,255,255,.03)":"rgba(255,255,255,.06)";
+        rr(P, y-46, W-P*2, 78, 16); c.fill();
+        txt(String(i+1), P+38, y+8, {size:34, weight:800, color:i===0?"#eeb425":DIM, align:"center"});
+        txt(x.j.nombre, P+86, y+8, {size:38, weight:650, color:INK, max:W-P*2-230});
+        txt(x.s.g, W-P-34, y+10, {size:46, weight:800, color:i===0?"#eeb425":INK, align:"right"});
+        y += 94;
+      });
+      cap = `📊 Tabla de goleadores\n`+t.map((x,i)=>`${i+1}. ${x.j.nombre} — ${x.s.g}`).join("\n")+
+        `\n\n#${S.club.replace(/\s+/g,"")} #goleadores #superliga8v8`;
+    }
+  }
+
+  if(postType==="convocatoria"){
+    const px = S.proximo, fx = proximoFixture();
+    const rival = px.rival || (fx? rivalDe(fx) : "");
+    const tit = fx && rivalDe(fx)===rival ? "FECHA "+fx.f+" · "+S.torneo.nombre.toUpperCase() : "PRÓXIMO PARTIDO";
+    txt(tit, W/2, mid, {size:34, weight:750, color:A, align:"center", track:5, max:W-P*2});
+    txt((rival||"A CONFIRMAR").toUpperCase(), W/2, mid+130, {size:74, weight:800, color:INK, align:"center", max:W-P*2});
+    txt("vs", W/2, mid+66, {size:30, color:DIM, align:"center"});
+    let y = mid+230;
+    const linea = (ic,t1,t2)=>{
+      c.fillStyle="rgba(255,255,255,.06)"; rr(P,y-48,W-P*2,86,18); c.fill();
+      txt(ic, P+44, y+10, {size:36, align:"center"});
+      txt(t1, P+92, y+2, {size:22, color:DIM, track:2});
+      txt(t2, W-P-30, y+10, {size:36, weight:650, color:INK, align:"right", max:W-P*2-260});
+      y+=104;
+    };
+    linea("📅","FECHA", px.fecha? fdateLong(px.fecha) : "A confirmar");
+    linea("🕗","HORA", px.hora||"A confirmar");
+    linea("📍","CANCHA", px.lugar|| (fx? (esLocal(fx)?"Local":"Visitante")+" · a confirmar" : "A confirmar"));
+    linea("💵","CUOTA", money(S.cfg.cuota)+" por jugador");
+    y += 20;
+    txt("CONFIRMÁ TU LUGAR EN EL GRUPO", W/2, y+10, {size:26, weight:700, color:A, align:"center", track:3});
+    txt("Somos "+S.cfg.formato+" · necesitamos "+Math.ceil(S.cfg.cancha/S.cfg.cuota)+" para cubrir la cancha", W/2, y+56, {size:24, color:DIM, align:"center"});
+    cap = `⚽ ${fx? "FECHA "+fx.f+" · "+S.torneo.nombre : "PRÓXIMO PARTIDO"}\nvs ${rival||"a confirmar"}\n📅 ${px.fecha? fdateLong(px.fecha):"a confirmar"} · 🕗 ${px.hora||"a confirmar"}\n📍 ${px.lugar||"a confirmar"}\n💵 ${money(S.cfg.cuota)} por jugador\n\nConfirmá en el grupo 🙌\n\n#${S.club.replace(/\s+/g,"")} #superliga8v8 #ps23soccer`;
+  }
+
+  if(postType==="convocados"){
+    const js = convocados(), px = S.proximo||{}, fx = proximoFixture();
+    const story = postFmt==="story";
+    const yT = story? 380 : 230;
+    txt((fx? "FECHA "+fx.f+" · " : "")+S.torneo.nombre.toUpperCase(), W/2, yT,
+        {size:story?26:20, weight:750, color:A, align:"center", track:5, max:W-P*2});
+    txt("LOS CONVOCADOS", W/2, yT+(story?76:54), {size:story?68:46, weight:800, color:INK, align:"center", track:4, max:W-P*2});
+    c.fillStyle=GOLD; c.fillRect(W/2-70, yT+(story?100:72), 140, 4);
+    const rival = px.rival || (fx? rivalDe(fx) : "");
+    txt((fx&&!esLocal(fx)?"visitante a ":"vs ").toUpperCase()+rival.toUpperCase(), W/2, yT+(story?150:106),
+        {size:story?34:24, weight:700, color:INK, align:"center", max:W-P*2});
+    const info=[]; if(px.fecha) info.push(fdateLong(px.fecha)); if(px.hora) info.push(px.hora); if(px.lugar) info.push(px.lugar);
+    if(info.length) txt(info.join("  ·  "), W/2, yT+(story?196:140), {size:story?26:19, weight:600, color:DIM, align:"center", track:2, max:W-P*2});
+
+    if(!js.length){ txt("Marcá los convocados en la app", W/2, yT+300, {size:38, align:"center", color:DIM}); }
+    else{
+      const cols = js.length>7? 2 : 1;
+      const rows = Math.ceil(js.length/cols), gap=20;
+      const cw = (W-P*2-gap*(cols-1))/cols;
+      const y0 = yT + (story?250:180);
+      const rh = Math.min(story?100:62, ((H-(story?190:110))-y0)/rows);
+      const fs = Math.max(17, Math.min(cols===1?50:40, rh*0.46));
+      js.forEach((j,i)=>{
+        const col = cols===1?0:i%cols, fil = cols===1?i:Math.floor(i/cols);
+        const x = P+col*(cw+gap), y = y0+fil*rh;
+        c.fillStyle="rgba(107,172,228,.12)"; rr(x,y,cw,rh-10,12); c.fill();
+        txt("✓", x+30, y+(rh-10)/2+fs*0.34, {size:fs*0.8, weight:800, color:A, align:"center"});
+        txt(j.nombre, x+62, y+(rh-10)/2+fs*0.34, {size:fs, weight:700, color:INK, max:cw-84});
+      });
+      const total = js.length*S.cfg.cuota, sobra = total - S.cfg.cancha;
+      txt(js.length+" CONFIRMADOS  ·  "+money(S.cfg.cuota)+" POR CABEZA", W/2, H-(story?118:76),
+          {size:story?26:19, weight:750, color:sobra>=0? "#0ca30c" : "#e66767", align:"center", track:3, max:W-P*2});
+    }
+    cap = `⚽ CONVOCADOS · ${fx? "Fecha "+fx.f : "Próximo partido"} ${S.torneo.nombre}\n`+
+      `${fx&&!esLocal(fx)?"visitante a ":"vs "}${rival}\n`+
+      (info.length? info.join(" · ")+"\n" : "")+`\n`+
+      js.map((j,i)=>(i+1)+". "+j.nombre).join("\n")+
+      `\n\n${js.length} confirmados · ${money(S.cfg.cuota)} por cabeza\n\n#${S.club.replace(/\s+/g,"")} #superliga8v8 #ps23soccer`;
+  }
+
+  if(postType==="plantel"){
+    const js = activos();
+    if(!js.length){ txt("Cargá el plantel primero", W/2, H/2, {size:44, align:"center", color:DIM}); }
+    else if(plantelEstilo==="bandera")   plantelBandera(js,W,H,P,A,GOLD,INK,DIM);
+    else if(plantelEstilo==="dorsales")  plantelDorsales(js,W,H,P,A,GOLD,INK,DIM);
+    else                                 plantelEditorial(js,W,H,P,A,GOLD,INK,DIM);
+    cap = `⚽ ESTE ES EL PLANTEL DE ${S.club.toUpperCase()}\n${S.torneo.nombre} · ${S.torneo.org}\n\n`+
+      js.map((j,i)=>String(i+1).padStart(2,"0")+"  "+j.nombre).join("\n")+
+      `\n\n${js.length} jugadores. Vamos ${S.club} 💪\n\n#${S.club.replace(/\s+/g,"")} #plantel #superliga8v8 #ps23soccer`;
+  }
+
+  if(postType==="posiciones"){
+    const t = tablaTorneo();
+    txt(S.torneo.nombre.toUpperCase(), W/2, mid-60, {size:34, weight:750, color:A, align:"center", track:5, max:W-P*2});
+    txt("TABLA DE POSICIONES", W/2, mid-16, {size:22, weight:600, color:DIM, align:"center", track:4});
+    const rh = postFmt==="story"? 96 : 78;
+    let y = mid + (postFmt==="story"? 90 : 60);
+    txt("PJ", W-P-186, y-30, {size:18, weight:650, color:DIM, align:"center"});
+    txt("DIF", W-P-116, y-30, {size:18, weight:650, color:DIM, align:"center"});
+    txt("PTS", W-P-38,  y-30, {size:18, weight:650, color:DIM, align:"center"});
+    t.forEach((r,i)=>{
+      const yo = r.eq===NOS;
+      c.fillStyle = yo? "rgba(107,172,228,.26)" : (i%2? "rgba(255,255,255,.03)":"rgba(255,255,255,.06)");
+      rr(P, y-rh*0.58, W-P*2, rh-12, 15); c.fill();
+      txt(String(i+1), P+34, y+8, {size:26, weight:800, color:i<3?"#eeb425":DIM, align:"center"});
+      txt(r.eq, P+70, y+8, {size:30, weight:yo?800:600, color:INK, max:W-P*2-330});
+      txt(r.pj,  W-P-186, y+8, {size:28, weight:600, color:DIM, align:"center"});
+      txt((r.dif>0?"+":"")+r.dif, W-P-116, y+8, {size:28, weight:600, color:DIM, align:"center"});
+      txt(r.pts, W-P-38,  y+8, {size:32, weight:800, color:INK, align:"center"});
+      y += rh;
+    });
+    const yo = posicion();
+    cap = `📊 Tabla de la ${S.torneo.nombre} (${S.torneo.org})\n`+
+      t.map((r,i)=>`${i+1}. ${r.eq} — ${r.pts} pts`).join("\n")+
+      `\n\nVamos ${yo.pos}º 💪\n\n#${S.club.replace(/\s+/g,"")} #superliga8v8 #ps23soccer`;
+  }
+
+  if(postType==="balance"){
+    const f = fondo(), r = record();
+    txt("LA TEMPORADA EN NÚMEROS", W/2, mid-30, {size:34, weight:750, color:A, align:"center", track:4});
+    const yo = posicion();
+    const cells = [
+      ["POSICIÓN", yo.pos+"º de "+yo.total], ["PUNTOS", String(yo.fila?yo.fila.pts:0)],
+      ["PARTIDOS", String(r.pj)], ["RÉCORD", r.G+"-"+r.E+"-"+r.P],
+      ["GOLES", r.gf+" : "+r.gc], ["FONDO DEL EQUIPO", money(f.saldo)]
+    ];
+    const cw=(W-P*2-24)/2, ch = postFmt==="story"? 190 : 150;
+    cells.forEach((cell,i)=>{
+      const x = P + (i%2)*(cw+24), y = mid+60 + Math.floor(i/2)*(ch+22);
+      c.fillStyle="rgba(255,255,255,.06)"; rr(x,y,cw,ch,20); c.fill();
+      txt(cell[0], x+28, y+44, {size:20, weight:650, color:DIM, track:2});
+      txt(cell[1], x+28, y+ch-38, {size:56, weight:800, color:INK, max:cw-56});
+    });
+    cap = `📊 ${S.club} — la temporada hasta hoy\n${yo.pos}º en la ${S.torneo.nombre} con ${yo.fila?yo.fila.pts:0} pts\n${r.pj} partidos · ${r.G}G ${r.E}E ${r.P}P\n${r.gf} goles a favor, ${r.gc} en contra\n💰 Fondo del equipo: ${money(f.saldo)}\n\n#${S.club.replace(/\s+/g,"")} #superliga8v8 #ps23soccer`;
+  }
+
+  // pie
+  if(PIE) txt("@"+S.club.toLowerCase().replace(/\s+/g,""), W/2, H-64, {size:24, color:"rgba(255,255,255,.35)", align:"center", track:3});
+
+  const cb=$("#caption"); if(cb && document.activeElement!==cb) cb.value = cap.trim();
+}
+
+/* =========================================================
+   MODAL / DATOS / INIT
+   ========================================================= */
+function openModal(html){ $("#sheet").innerHTML=html; $("#modal").classList.add("on"); }
+function closeModal(){ $("#modal").classList.remove("on"); }
+$("#modal").addEventListener("click", e=>{ if(e.target.id==="modal") closeModal(); });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeModal(); });
+
+function goTab(t){ tab=t; render(); window.scrollTo(0,0); }
+$("#tabs").addEventListener("click", e=>{ const b=e.target.closest("button"); if(b) goTab(b.dataset.t); });
+$("#clubName").addEventListener("input", e=>{ S.club=e.target.value||"Westjan FC"; save(); });
+$("#clubName").addEventListener("blur", render);
+$("#btnTheme").addEventListener("click", ()=>{
+  const d = document.documentElement.getAttribute("data-theme")==="dark";
+  document.documentElement.setAttribute("data-theme", d?"light":"dark");
+  try{ LS && LS.setItem("westjan-tema", d?"light":"dark"); }catch(e){}
+});
+$("#btnPub").addEventListener("click", exportarPublico);
+$("#btnData").addEventListener("click", ()=>{
+  const f = fondo();
+  openModal(`<h2>Datos y respaldo</h2>
+    <p class="hint"><b>Versión ${VER}</b> · ${LS? "Los datos se guardan solos en este navegador." : "⚠️ Este navegador no permite guardar. Exportá el archivo antes de cerrar."}
+    Exportá un respaldo cada tanto y compartilo con el grupo.</p>
+    <div class="row" style="margin-top:14px;align-items:center;gap:14px">
+      <div class="crest" style="width:56px;height:56px">${(S.marca?.logo||LOGO_SRC)?`<img src="${S.marca?.logo||LOGO_SRC}" alt="Escudo">`:esc(S.emoji||"⚽")}</div>
+      <div>
+        <button class="btn ghost sm" onclick="$('#logoUp').click()">Cambiar escudo</button>
+        ${S.marca?.logo?`<button class="btn ghost sm" onclick="resetLogo()">Volver al original</button>`:""}
+        <input type="file" id="logoUp" accept="image/*" style="display:none" onchange="subirLogo(this)">
+        <div class="hint" style="margin-top:4px">Colores: celeste #6BACE4, blanco y sol #EEB425 del escudo.</div>
+      </div>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:14px">
+      <label class="f">Emoji de respaldo<input id="d-emoji" value="${esc(S.emoji)}" maxlength="4"></label>
+      <label class="f">Formato<input id="d-fmt" value="${esc(S.cfg.formato)}"></label>
+      <label class="f">Cuota por jugador<input type="number" id="d-cuota" value="${S.cfg.cuota}"></label>
+      <label class="f">Costo de cancha<input type="number" id="d-cancha" value="${S.cfg.cancha}"></label>
+    </div>
+    <div class="hint" style="margin-top:8px">Se cubre con ${Math.ceil((+S.cfg.cancha||0)/(+S.cfg.cuota||1))} jugadores. Fondo actual: <b>${money(f.saldo)}</b>.</div>
+    <div class="row" style="margin-top:16px">
+      <button class="btn ghost sm" onclick="exportJSON()">⬇ Exportar respaldo</button>
+      <button class="btn ghost sm" onclick="copiarDatos()">📋 Copiar datos</button>
+      <button class="btn ghost sm" onclick="$('#imp').click()">⬆ Importar respaldo</button>
+      <button class="btn ghost sm" onclick="exportCSV()">⬇ Exportar CSV</button>
+      <button class="btn danger sm" onclick="wipe()">Borrar todo</button>
+      <input type="file" id="imp" accept="application/json" style="display:none" onchange="importJSON(this)">
+    </div>
+    <div id="dlBox" style="margin-top:12px"></div>
+    <div class="sticky-actions"><button class="btn" onclick="saveCfg()">Guardar</button></div>`);
+});
+function saveCfg(){
+  S.emoji=$("#d-emoji").value||"⚽"; S.cfg.formato=$("#d-fmt").value||"F8";
+  S.cfg.cuota=+$("#d-cuota").value||20; S.cfg.cancha=+$("#d-cancha").value||180;
+  closeModal(); render(); toast("Configuración guardada");
+}
+function construirPublico(){
+  const clone = document.documentElement.cloneNode(true);
+  clone.querySelectorAll("main section.tab").forEach(x=>x.innerHTML="");
+  const sh = clone.querySelector("#sheet"); if(sh) sh.innerHTML="";
+  const md = clone.querySelector("#modal"); if(md) md.classList.remove("on");
+  const ts = clone.querySelector("#toast"); if(ts){ ts.textContent=""; ts.classList.remove("on"); }
+  const inp = clone.querySelector("#clubName"); if(inp) inp.setAttribute("value", S.club);
+  const sc = document.createElement("script");
+  sc.textContent = "window.__WJ_RO__ = "+JSON.stringify(S)+";\nwindow.__WJ_FECHA__ = "+JSON.stringify(hoy())+";";
+  clone.querySelector("head").appendChild(sc);
+  return "<!DOCTYPE html>\n"+clone.outerHTML;
+}
+function bajar(nombre, contenido, tipo, auto=true){
+  // algunos navegadores bloquean la descarga automática desde un archivo local:
+  // se intenta, y además queda un link real para hacer clic a mano
+  const url = URL.createObjectURL(new Blob([contenido],{type:tipo}));
+  const a = document.createElement("a");
+  a.href=url; a.download=nombre; a.textContent="⬇ Descargar "+nombre;
+  a.className="btn"; a.style.cssText="display:inline-block;text-decoration:none;margin-top:10px";
+  document.body.appendChild(a);
+  if(auto){ try{ a.click(); }catch(e){} }
+  const caja = $("#dlBox");
+  if(caja){
+    caja.innerHTML = "";
+    caja.appendChild(a);
+    caja.insertAdjacentHTML("beforeend",
+      `<div class="hint" style="margin-top:8px">Si no se descargó solo, tocá el botón de arriba.
+       También podés hacerle clic derecho → <i>Descargar archivo vinculado como…</i></div>`);
+    a.style.margin="0";
+  } else { setTimeout(()=>a.remove(), 60000); }
+  setTimeout(()=>URL.revokeObjectURL(url), 120000);
+}
+function exportarPublico(){
+  const f = fondo();
+  openModal(`<h2>Actualizar la página del equipo</h2>
+    <p class="hint" style="margin-top:0">Se va a publicar esto: <b>${S.jugadores.length} jugadores</b>,
+      fondo <b>${money(f.saldo)}</b>, ${f.porCobrar>0? money(f.porCobrar)+" por cobrar" : "todo cobrado"},
+      ${S.partidos.length} partido${S.partidos.length===1?"":"s"} cargado${S.partidos.length===1?"":"s"}.</p>
+    <div class="card" style="background:var(--surface-2);margin-top:14px">
+      <div style="font-weight:700;margin-bottom:6px">Paso 1 · Descargar</div>
+      <div id="dlBox"></div>
+    </div>
+    <div class="card" style="background:var(--surface-2)">
+      <div style="font-weight:700;margin-bottom:6px">Paso 2 · Subir</div>
+      <div class="hint">Entrá a <b>app.netlify.com</b> → proyecto <b>westjan-fc</b> → pestaña <b>Deploys</b>
+        → <i>browse files to upload</i> y elegí el archivo que acabás de bajar.<br>
+        O mandámelo por el chat y lo subo yo.</div>
+    </div>
+    <div class="sticky-actions"><button class="btn ghost" onclick="closeModal()">Cerrar</button></div>`);
+  bajar("index.html", construirPublico(), "text/html;charset=utf-8", false);
+}
+function copiarDatos(){
+  const t = JSON.stringify(S);
+  navigator.clipboard?.writeText(t).then(
+    ()=>toast("Datos copiados ("+Math.round(t.length/1024)+" KB) — pegalos en el chat"),
+    ()=>toast("No se pudo copiar"));
+}
+function exportJSON(){
+  bajar(S.club.replace(/\s+/g,"-").toLowerCase()+"-respaldo-"+hoy()+".json",
+        JSON.stringify(S,null,2), "application/json");
+}
+function importJSON(inp){
+  const f=inp.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ S=Object.assign(structuredClone(DEF),JSON.parse(r.result)); closeModal(); render(); toast("Datos importados"); }
+                 catch(e){ toast("Archivo inválido"); } };
+  r.readAsText(f);
+}
+function exportCSV(){
+  const rows=[["Apodo","PJ","Goles","Asistencias","Amarillas","Rojas","MVP","Asistencia %","Pagado","Debe"]];
+  S.jugadores.forEach(j=>{const s=statsJugador(j); rows.push([j.nombre,s.pj,s.g,s.a,s.am,s.rj,s.mvp,s.asist,s.pagado,s.debe]);});
+  rows.push([]); rows.push(["Fecha","Rival","GF","GC","Presentes","Recaudado","Cancha","Resultado"]);
+  ordenados().forEach(p=>{const m=matchFin(p); rows.push([p.fecha,p.rival,+p.gf||0,+p.gc||0,m.n,m.cobrado,m.cancha,m.resultado]);});
+  const csv=rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob(["﻿"+csv],{type:"text/csv;charset=utf-8"}));
+  a.download=S.club.replace(/\s+/g,"-").toLowerCase()+"-datos.csv"; a.click(); toast("CSV descargado");
+}
+function wipe(){
+  if(!confirm("¿Borrar TODOS los datos? No se puede deshacer.")) return;
+  S=structuredClone(DEF); closeModal(); render(); toast("Todo borrado");
+}
+
+/* ---------- init ---------- */
+try{ const t = LS && LS.getItem("westjan-tema"); if(t) document.documentElement.setAttribute("data-theme",t); }catch(e){}
+S = load();
+cargarLogo();
+render();
+</script>
+</body>
+</html>
