@@ -962,7 +962,7 @@ function vPartidos(){
         const cls = p.gf>p.gc? "g" : p.gf===p.gc? "e" : "p";
         const txt = p.gf>p.gc? "G" : p.gf===p.gc? "E" : "P";
         return `<a class="vcard" href="${esc(p.video)}" target="_blank" rel="noopener">
-          <div class="vthumb"><img src="${esc(ytThumb(p.video))}" alt="" loading="lazy"><div class="vplay">&#9654;</div></div>
+          <div class="vthumb"><img src="${esc(ytThumb(p.video))}" alt="" onerror="this.style.display='none'"><div class="vplay">&#9654;</div></div>
           <div class="vmeta">
             <div class="row" style="gap:8px">
               <span class="pill ${cls}">${txt}</span>
